@@ -1,44 +1,81 @@
 from flask import Flask, jsonify
+from pymongo import MongoClient
+from utils import cleanseAxieWalletData
+from db import getAvailableAxieWallets, deleteAxieWallet, createAxieWallet, addAxiesToWallet
+from w3Connect import getAxiesInWallet, returnAxiesToOwner
 
 app = Flask(__name__)
-
-
-# currently setup to return dummy data for all routes
+client = MongoClient('localhost', 27017)
+db = client.axie
 
 @app.route("/start-lending/<string:ownerWallet>")
 def startLending(ownerWallet):
     """
-    generate wallet, transfer axie to wallet, create axie account
+    generate wallet, create axie account
     """
-    return jsonify({"message": "started lending for " + ownerWallet})
 
-@app.route("/return-axies/<string:wallet>")
-def returnAxies(wallet):
+    # TODO: create ronin wallet to store axies
+    axieWalletAddr = ""
+    # TODO: create axie account
+    (axieAccountUsername, axieAccountPassword) = ("", "")
+
+    createAxieWallet(db, axieWalletAddr, ownerWallet, axieAccountUsername, axieAccountPassword)
+
+    return jsonify({
+            "message": "started lending for " + ownerWallet,
+            "wallet": newAxieWalletAddr
+        })
+
+@app.route("/finish-transfer/<string:ownerWallet>/<string:axieWallet>")
+def finishTransfer(ownerWallet, axieWallet):
+    """
+    user has transfered axies to account, update db with new data
+    """
+
+    # TODO: get axies in wallet
+    axies = getAxiesInWallet(ownerWallet)
+
+    addAxiesToWallet(db, axieWallet, axies)
+
+    return jsonify({"message": "finished transfer for " + ownerWallet})
+
+@app.route("/return-axies/<string:axieWallet>")
+def returnAxies(axieWallet):
     """
     return the axies to their original owner
     """
+
+    # TODO: return axies to original owner
+    returnAxiesToOwner(axieWallet, originalOwner)
+
+    deleteAxieWallet(db, axieWallet) 
     return jsonify({"message": "returned axies to " + wallet})
 
-@app.route("/list-lent-axies")
-def listListAxies():
+@app.route("/list-lent-axies", defaults={"ownerWallet": None})
+@app.route("/list-lent-axies/<string:ownerWallet>")
+def listLentAxies(ownerWallet):
     """
-    returns a list of all the axies that are lent out
+    returns a list of all the axie wallets that are available to be borrowed and belong to the given owner
     """
+    data = getAvailableAxieWallets(db, ownerWallet)
+    cleanedData = cleanseAxieWalletData(data)
+
     return jsonify({
             "message": "list of axies lent out",
-            "data": ["0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", "0x06012c8cf97BEaD5deAe237070F9587f8E7A266d"]
+            "data": cleanedData
         })
 
-@app.route("/use-axie-account/<string:accountId>")
-def useAxieAccount(accountId):
+@app.route("/use-axie-account/<string:axieWallet>")
+def useAxieAccount(axieWallet):
     """
     get axie account login info
     """
+    wallet = getAxieWallet(db, axieWallet)
     return jsonify({
-        "message": "axie account login info: " + accountId,
+        "message": "axie account login info: " + wallet,
             "data": {
-            "username": "axie-username",
-            "password": "axie-password" # encrypted password??? it's fine, it's a hackathon
+                "username": wallet["username"],
+                "password": wallet["password"] # encrypted password??? it's fine, it's a hackathon
             }
         })
 
