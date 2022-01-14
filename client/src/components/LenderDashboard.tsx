@@ -1,9 +1,5 @@
 function LenderDashboard() {
-
-  return (
-    <div >
-    </div>
-  )
+  return <div></div>;
 }
 
-export default LenderDashboard
+export default LenderDashboard;

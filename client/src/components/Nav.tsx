@@ -1,19 +1,26 @@
-import {Link} from "react-router-dom"
-import { Disclosure, } from '@headlessui/react'
-import { MenuIcon, XIcon } from '@heroicons/react/outline'
-import { useLocation } from 'react-router-dom'
-
+import { Link } from "react-router-dom";
+import { Disclosure } from "@headlessui/react";
+import { MenuIcon, XIcon } from "@heroicons/react/outline";
+import { useLocation } from "react-router-dom";
 
 function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 function Nav() {
-const location = useLocation();
-const navigation = [
-  { name: 'Home', href: '/', current: location.pathname == "/"},
-  { name: 'Lender Dashboard', href: '/lender-dashboard', current: location.pathname == "/lender-dashboard" },
-  { name: 'Marketplace', href: '/marketplace', current: location.pathname == "/marketplace" },
-]
+  const location = useLocation();
+  const navigation = [
+    { name: "Home", href: "/", current: location.pathname == "/" },
+    {
+      name: "Lender Dashboard",
+      href: "/lender-dashboard",
+      current: location.pathname == "/lender-dashboard",
+    },
+    {
+      name: "Marketplace",
+      href: "/marketplace",
+      current: location.pathname == "/marketplace",
+    },
+  ];
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -39,10 +46,12 @@ const navigation = [
                         key={item.name}
                         to={item.href}
                         className={classNames(
-                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'px-3 py-2 rounded-md text-sm font-medium'
+                          item.current
+                            ? "bg-gray-900 text-white"
+                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                          "px-3 py-2 rounded-md text-sm font-medium"
                         )}
-                        aria-current={item.current ? 'page' : undefined}
+                        aria-current={item.current ? "page" : undefined}
                       >
                         {item.name}
                       </Link>
@@ -61,10 +70,12 @@ const navigation = [
                   as="a"
                   href={item.href}
                   className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'block px-3 py-2 rounded-md text-base font-medium'
+                    item.current
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                    "block px-3 py-2 rounded-md text-base font-medium"
                   )}
-                  aria-current={item.current ? 'page' : undefined}
+                  aria-current={item.current ? "page" : undefined}
                 >
                   {item.name}
                 </Disclosure.Button>
@@ -74,7 +85,7 @@ const navigation = [
         </>
       )}
     </Disclosure>
-  )
+  );
 }
 
-export default Nav
+export default Nav;
