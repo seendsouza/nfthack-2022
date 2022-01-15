@@ -30,7 +30,9 @@ function Marketplace() {
     />
   ));
   console.log(cards);
-  return <div>{cards}</div>;
+  return <div className="container mx-auto pt-5"> 
+          <div className="flex flex-wrap">{cards}</div>
+         </div>;
 }
 
 export default Marketplace;

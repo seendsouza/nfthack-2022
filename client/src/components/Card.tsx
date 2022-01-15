@@ -10,12 +10,12 @@ type CardProps = {
 function Card(props: CardProps) {
   const { images, tokenIds, lenderAddress } = props;
   return (
-    <div className="w-full md:w-1/2 xl:w-1/3 px-4">
+    <div className="w-fit md:w-1/2 xl:w-1/3 px-4 drop-shadow-lg">
       <div className="bg-white rounded-lg overflow-hidden mb-10">
-        <div>
-          <img src={images[0]} alt="Axie" className="w-full" />
-          <img src={images[1]} alt="Axie" className="w-full" />
-          <img src={images[2]} alt="Axie" className="w-full" />
+        <div className="h-screen max-h-60 max-w-md  border-2 m-3 flex justify-center items-center">
+          <img src={images[0]} alt="Axie" className="h-[75%] mt-[2.5rem]" />
+          <img src={images[1]} alt="Axie" className="h-[75%] -mx-[8rem] -mt-[3rem]" />
+          <img src={images[2]} alt="Axie" className="h-[75%] mt-[2.5rem]" />
         </div>
         <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
           <p className="text-base text-body-color leading-relaxed mb-7">
