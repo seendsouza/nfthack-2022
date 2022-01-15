@@ -66,8 +66,8 @@ function Scholarships() {
             </button>
           </div>
         </div>
-        <div className="w-full flex items-center justify-between">
-          <div className="mx-8 mt-4">
+        <div className="w-full flex items-center justify-center">
+          <div className="mt-4">
             {selectedIndex === 0 ? <Lendings /> : <Rentings />}
           </div>
         </div>

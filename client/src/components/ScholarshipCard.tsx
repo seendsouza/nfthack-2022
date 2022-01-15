@@ -20,7 +20,7 @@ function ScholarshipCard(props: CardProps) {
     lenderAddress,
   } = props;
   return (
-    <div className="w-full md:w-1/2 xl:w-1/3 border border-grey rounded-lg">
+    <div className="w-full md:w-[40%] xl:w-[32%] m-2 border border-grey rounded-lg">
       <div className="bg-white rounded-lg overflow-hidden mb-2 px-4">
         <div className="flex w-full items-center">
           <div className="flex flex-row w-2/3 justify-center">

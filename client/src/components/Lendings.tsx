@@ -41,7 +41,7 @@ function Lendings() {
 
   return (
     <div className="container mx-auto pt-5">
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap justify-center">
         {cards === undefined || cards.length === 0 ? "No Lendings" : cards}
       </div>
     </div>

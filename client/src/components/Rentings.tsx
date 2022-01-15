@@ -1,16 +1,17 @@
 import ScholarshipCard from "./ScholarshipCard";
 import { useQuery } from "react-query";
-import { getLentAxies } from "../api";
+import { getRenterAxies } from "../api";
 import { getAxieUrl } from "../util";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import type { Axie } from "../types";
 
-function useRentedAxiesByKey(lenderAddress: string) {
+
+function useRentedAxiesByKey(renterAddress: string) {
   return useQuery<Axie[], Error>(
     "rentedAxies",
     // TDOO: replace this with getRentedAxies
-    async () => await getLentAxies(lenderAddress)
+    async () => await getRenterAxies(renterAddress)
   );
 }
 
@@ -44,7 +45,7 @@ function Rentings() {
 
   return (
     <div className="container mx-auto pt-5">
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap justify-center">
         {cards === undefined || cards.length === 0 ? "No Rentings" : cards}
       </div>
     </div>
