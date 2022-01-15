@@ -27,11 +27,25 @@ def createAxieWallet(db, axieWalletAddr, lenderAddress, username, password):
             "lenderAddress": lenderAddress,
             "tokenIds": [],
             "isCurrentlyUsed": False,
-            "username": username,
-            "password": password,
+            "username": "",
+            "password": "",
         }
     )
 
+def completeTransfer(db, axieWalletAddr, axies, username, password):
+    """
+    complete transfer of axies to axieWallet
+    """
+    db.axieWallets.update_one(
+        {"axieWalletAddress": axieWalletAddr},
+        {
+            "$set": {
+                "tokenIds": axies,
+                "username": username,
+                "password": password,
+            }
+        },
+    )
 
 def addAxiesToWallet(db, axieWalletAddr, axies):
     """

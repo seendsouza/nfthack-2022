@@ -13,6 +13,7 @@ from db import (
     setAxieWalletUsage,
     getRentersAxieWallets,
     rentAxiesWallet,
+    completeTransfer
 )
 from w3Connect import returnAxiesToOwner
 
@@ -30,7 +31,7 @@ db = client.axie
 @app.route("/start-lending/<string:lenderWallet>", methods=["POST"])
 def startLending(lenderWallet):
     """
-    generate wallet, create axie account
+    generate wallet 
     """
 
     # TODO: This is not the correct flow. We generate the wallet, we show this wallet
@@ -40,15 +41,7 @@ def startLending(lenderWallet):
     newAxieWallet = createWallet()
     newAxieWalletAddr = "0x" + newAxieWallet.addr.hex()
 
-    # TODO: create axie account and return axie account username/password
-    (axieAccountUsername, axieAccountPassword) = (
-        str(rand.randint(0, 100000)),
-        str(rand.randint(0, 100000)),
-    )
-
-    createAxieWallet(
-        db, newAxieWalletAddr, lenderWallet, axieAccountUsername, axieAccountPassword
-    )
+    createAxieWallet(db, newAxieWalletAddr, lenderWallet)
 
     return jsonify(
         {
@@ -63,14 +56,22 @@ def startLending(lenderWallet):
 )
 def finishTransfer(lenderWallet, axieWallet):
     """
-    user has transferred axies to account, update db with new data
+    user has transferred axies to wallet, create axie account, update db with new data
     """
 
     # ! make sure the axieWallet is of the form: 0x3db763bbbb1ac900eb2eb8b106218f85f9f64a13
     axies = getAxiesIds(axieWallet)
 
     # store token ids in db
-    addAxiesToWallet(db, axieWallet, axies)
+    #addAxiesToWallet(db, axieWallet, axies)
+
+    # TODO: create axie account and return axie account username/password
+    (axieAccountUsername, axieAccountPassword) = (
+        str(rand.randint(0, 100000)),
+        str(rand.randint(0, 100000)),
+    )
+
+    completeTransfer(db, axieWallet, axies, axieAccountUsername, axieAccountPassword)
 
     return jsonify({"message": "finished transfer for " + lenderWallet})
 
