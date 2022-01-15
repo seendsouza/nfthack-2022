@@ -10,7 +10,7 @@ axie-wallets
     "isCurrentlyUsed": Boolean,
     "username": String,
     "password": String,
-    "rentedAt": Date (UNIX epoch),
+    "rentedAt": int (UNIX epoch),
     "renterAddress": String
   }
 ]
@@ -49,6 +49,13 @@ def getAxieWallet(db, axieWallet):
     gets one specific axieWallet from database
     """
     return db.axieWallets.find_one({"axieWalletAddress": axieWallet})
+
+def rentAxiesWallet(db, axieWallet, renterAddress, time):
+    """
+    rent axies from axieWallet
+    """
+    db.axieWallets.update_one({"axieWalletAddress": axieWallet}, {"$set": {"renterAddress": renterAddress, "rentedAt": time, "isCurrentlyUsed": True}})
+        
 
 def setAxieRentedAtTime(db, axieWallet, rentedAt):
     """

@@ -4,6 +4,8 @@ export interface Axie {
   lenderAddress: string
   axieWalletAddress: string;
   isCurrentlyUsed: boolean;
+  rentedAt: number;
+  renterAddress: string;
 }
 
 export interface LoginInfo {

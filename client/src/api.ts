@@ -24,8 +24,8 @@ export const getLentAxies = async (lenderWalletAddress?: string): Promise<Axie[]
     .then(res => res.data);
 };
 
-export const getAxieAccount = async (axieWalletAddress: string): Promise<LoginInfo> => {
-  return fetch(`${serverUri}/get-axie-account-info/${axieWalletAddress}`)
+export const rentAxies = async (axieWalletAddress: string): Promise<LoginInfo> => {
+  return fetch(`${serverUri}/rent-axies/${axieWalletAddress}`)
     .then(res => res.json())
     .then(res => res.data);
 };

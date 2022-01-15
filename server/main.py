@@ -5,7 +5,7 @@ from pymongo import MongoClient
 from flask_cors import CORS
 from utils import cleanseAxieWalletData
 from db import getAvailableAxieWallets, deleteAxieWallet, createAxieWallet, addAxiesToWallet, \
-    getAxieWallet, setAxieWalletUsage, getRentersAxieWallets, setAxieRentedAtTime
+    getAxieWallet, setAxieWalletUsage, getRentersAxieWallets, rentAxiesWallet
 from w3Connect import getAxiesInWallet, returnAxiesToOwner
 
 app = Flask(__name__)
@@ -72,14 +72,13 @@ def listLentAxies(lenderAddress):
             "data": cleanedData
         })
 
-@app.route("/get-axie-account-info/<string:axieWallet>")
-def getAxieAccountInfo(axieWallet):
+@app.route("/rent-axies/<string:axieWallet>/<string:renterAddress>")
+def rentAxies(axieWallet, renterAddress):
     """
     user rents axies, get axie account info (username, password), set axie wallet to be in use, set rented at date
     """
     wallet = getAxieWallet(db, axieWallet)
-    setAxieWalletUsage(db, axieWallet, True)
-    setAxieRentedAtTime(db, axieWallet, int(time.time()))
+    rentAxiesWallet(db, axieWallet, renterAddress, int(time.time()))
 
     if wallet is None:
         return jsonify({"message": "axie wallet not found"})
@@ -106,8 +105,8 @@ def getRenterAxies(renterAddress):
     """
     get axies that are currently being rented
     """
-    data = getRenterAxies(db, renterAddress)
-    cleaned_data = cleanseAxieWalletData(axies)
+    data = getRentersAxieWallets(db, renterAddress)
+    cleaned_data = cleanseAxieWalletData(data)
 
     return jsonify({
             "message": "axies being rented by " + renterAddress,
@@ -136,7 +135,8 @@ def fakeInsert():
         "username": "axie-username-"+str(rand.randint(0, 100000)),
         "password": "axie-password-"+str(rand.randint(0, 100000)),
         "tokenIds": [str(rand.randint(0, 100000)), str(rand.randint(0, 100000)), str(rand.randint(0, 100000))],
-        "isCurrentlyUsed": False
+        "isCurrentlyUsed": False,
+        "rentedAt": rand.randint(0, 100000)
     })
     return jsonify({"message": "inserted fake data"})
 
