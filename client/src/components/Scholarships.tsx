@@ -72,7 +72,12 @@ function Scholarships() {
           </div>
         </div>
       </div>
-      <LendModal isOpen={isOpen} />
+      <LendModal
+        isOpen={isOpen}
+        close={() => {
+          setIsOpen(false);
+        }}
+      />
     </div>
   );
 }

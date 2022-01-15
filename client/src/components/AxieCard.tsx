@@ -45,6 +45,7 @@ function AxieCard(props: CardProps) {
                      "
       >
         onClick={onClick}
+        disabled={!isPicked && pickedAxies.length === 3}
         {isPicked ? "Pick Axie" : "Unpick Axie"}
       </button>
     </div>
