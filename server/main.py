@@ -158,6 +158,15 @@ def getRenterAxies(renterAddress):
         {"message": "axies being rented by " + renterAddress, "data": cleaned_data}
     )
 
+@app.route("/get-axies-in-wallet/<string:wallet>")
+def getAxiesInWallet(wallet):
+    """
+    get axies all axies that are in a given wallet 
+    """
+    data = getAxiesIds(wallet)
+
+    return jsonify({"message": "axies in wallet", "data": data})
+
 
 ############################################################################################
 ## these are for testing/dev purposes

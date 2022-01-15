@@ -40,3 +40,9 @@ export const getRenterAxies = async (renterWalletAddress: string): Promise<Axie[
     .then(res => res.json())
     .then(res => res.data);
 };
+
+export const getAxiesInWallet = async (walletAddress: string): Promise<string[]> => {
+  return fetch(`${serverUri}/get-axies-in-wallet/${walletAddress}`)
+    .then(res => res.json())
+    .then(res => res.data);
+};
