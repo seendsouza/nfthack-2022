@@ -3,7 +3,11 @@ import string, time
 from flask import Flask, jsonify
 from pymongo import MongoClient
 from flask_cors import CORS
+<<<<<<< HEAD
 from utils import cleanseAxieWalletData, createWallet, getAxiesIds
+=======
+from utils import cleanseAxieWalletData, createWallet as createWallet
+>>>>>>> e48bfb0 (added use axies)
 from db import getAvailableAxieWallets, deleteAxieWallet, createAxieWallet, addAxiesToWallet, \
     getAxieWallet, setAxieWalletUsage, getRentersAxieWallets, rentAxiesWallet
 from w3Connect import returnAxiesToOwner

@@ -4,7 +4,6 @@ from coincurve import PublicKey
 from sha3 import keccak_256
 import requests
 
-# ! consider moving to env vars
 AXIES_API = 'https://graphql-gateway.axieinfinity.com/graphql'
 
 

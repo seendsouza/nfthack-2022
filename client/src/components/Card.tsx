@@ -1,16 +1,32 @@
+import { useState } from "react";
+import { useQuery } from "react-query";
 import UseAxieTeamModal from "./UseAxieTeamModal";
+import { rentAxies } from "../api.ts";
+import type { LoginInfo } from "../types";
 
 const shortenAddress = (address: string) => {
   return `${address.slice(0, 6)}...${address.slice(-5, -1)}`;
 };
 
+function useAxieTeam(axieWalletAddress: string, renterWalletAddress: string) {
+  return useQuery<LoginInfo, Error>("axie-team", async () => await rentAxies(axieWalletAddress, renterWalletAddress));
+}
+
 type CardProps = {
   images: string[];
   tokenIds: string[];
   lenderAddress: string;
+  axieWalletAddress: string;
 };
+
 function Card(props: CardProps) {
-  const { images, tokenIds, lenderAddress } = props;
+  const { images, tokenIds, lenderAddress, axieWalletAddress } = props;
+  const [ useAxieModalOpen, setUseAxieModalOpen ] = useState(false);
+
+  const renterAddress: string = "hehexd";
+
+  const { data, error, isError, isLoading } = useAxieTeam(axieWalletAddress, renterAddress);
+
   return (
     <div className="w-fit md:w-1/2 xl:w-1/3 px-4 drop-shadow-lg">
       <div className="bg-white rounded-lg overflow-hidden mb-10 flex flex-col items-center">
@@ -40,14 +56,14 @@ function Card(props: CardProps) {
                      transition
                      "
             onClick={() => {
-              console.log("clicked");
+              setUseAxieModalOpen(true);
             }}
           >
             Use Axie Team
           </button>
         </div>
       </div>
-      <UseAxieTeamModal />
+      <UseAxieTeamModal isOpen={useAxieModalOpen} hitClose={() => { setUseAxieModalOpen(false); }} loginInfo={data} />
     </div>
   );
 }

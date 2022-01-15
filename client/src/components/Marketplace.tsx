@@ -27,6 +27,7 @@ function Marketplace() {
       images={lending.tokenIds.map(getAxieUrl)}
       tokenIds={lending.tokenIds}
       lenderAddress={lending.lenderAddress}
+      axieWalletAddress={lending.axieWalletAddress}
     />
   ));
   console.log(cards);
