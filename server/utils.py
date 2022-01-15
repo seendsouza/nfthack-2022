@@ -45,6 +45,8 @@ def createWallet() -> Wallet:
 # TODO: only returns 20 axies. Checked on: 0x7a904e39c0adf17f89da54a8edc7dc031fa4281a.
 # TODO: The address above has 38 axies, but only 20 are returned.
 # TODO: if you make a raw POST request in Postman, you will see that ['data']['axies']['total'] is correct at 38
+# TODO: and the answer to the above is here: https://axie-graphql.web.app/operations/getAxieLatest#size
+# TODO: we will need to paginate
 # ronin address should be of the following format: 0x3db763bbbb1ac900eb2eb8b106218f85f9f64a13
 def getAxiesIds(ronin_address: str):
     axies = []
