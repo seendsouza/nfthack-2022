@@ -13,7 +13,8 @@ from db import (
     setAxieWalletUsage,
     getRentersAxieWallets,
     rentAxiesWallet,
-    completeTransfer
+    completeTransfer,
+    stopUsingAxie
 )
 from w3Connect import returnAxiesToOwner
 
@@ -137,11 +138,11 @@ def rentAxies(axieWallet, renterAddress):
 
 
 @app.route("/stop-using-axie/<string:axieWallet>")
-def stopUsingAxie(axieWallet):
+def stopUsingAxieRoute(axieWallet):
     """
     stop using axie account, set axie wallet to be available for other renters
     """
-    setAxieWalletUsage(db, axieWallet, False)
+    stopUsingAxie(db, axieWallet)
 
     return jsonify({"message": "stopped using axie account"})
 
@@ -163,6 +164,10 @@ def getAxiesInWallet(wallet):
     """
     get axies all axies that are in a given wallet 
     """
+
+    if wallet is None or wallet == "undefined" or wallet == "" or wallet == "null":
+        return jsonify({"message": "no wallet supplied"}), 400
+
     data = getAxiesIds(wallet)
 
     return jsonify({"message": "axies in wallet", "data": data})

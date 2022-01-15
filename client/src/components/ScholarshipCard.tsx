@@ -1,3 +1,5 @@
+import { stopUsingAxie, returnAxiesToOwner } from "../api";
+
 type CardProps = {
   images: string[];
   lendingId: string;
@@ -7,6 +9,7 @@ type CardProps = {
   revshare: string;
   lenderAddress?: string;
   isLending: boolean;
+  axieWalletAddress: string;
 };
 function ScholarshipCard(props: CardProps) {
   const {
@@ -18,7 +21,17 @@ function ScholarshipCard(props: CardProps) {
     revshare,
     isLending,
     lenderAddress,
+    axieWalletAddress,
   } = props;
+
+  function handleReturnAxie() {
+    if (isLending) {
+      returnAxiesToOwner(axieWalletAddress);
+    } else {
+      stopUsingAxie(axieWalletAddress);
+    }
+  }
+
   return (
     <div className="w-full md:w-[40%] xl:w-[32%] m-2 border border-grey rounded-lg">
       <div className="bg-white rounded-lg overflow-hidden mb-2 px-4">
@@ -68,6 +81,7 @@ function ScholarshipCard(props: CardProps) {
                      hover:border-primary hover:bg-primary
                      transition
                      "
+        onClick={handleReturnAxie}
       >
         {isLending ? "Revoke Axies" : "Return Axies"}
       </button>

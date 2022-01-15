@@ -31,7 +31,7 @@ export const rentAxies = async (axieWalletAddress: string, renterWalletAddress: 
 };
 
 export const stopUsingAxie = async (axieWalletAddress: string): Promise<void> => {
-  return fetch(`${serverUri}/stop-using-axie/${axieWalletAddress}`, { method: "POST" })
+  return fetch(`${serverUri}/stop-using-axie/${axieWalletAddress}`)
     .then(() => {return;});
 }
 

@@ -40,6 +40,7 @@ function Rentings() {
       revshare={"70/30"}
       isLending={false}
       lenderAddress={lending.lenderAddress}
+      axieWalletAddress={lending.axieWalletAddress}
     />
   ));
 

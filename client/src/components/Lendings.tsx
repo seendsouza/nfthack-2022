@@ -45,6 +45,7 @@ function Lendings() {
       currency={"USDC"}
       revshare={"70/30"}
       isLending={true}
+      axieWalletAddress={lending.axieWalletAddress}
     />
   ));
 

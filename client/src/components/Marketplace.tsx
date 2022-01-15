@@ -49,12 +49,22 @@ function Marketplace() {
       />
     ));
   console.log(cards);
+
+  const cardDisplay = (
+    <div className="container mx-auto pt-5">
+      <div className="flex flex-wrap">{cards}</div>
+    </div>);
+
+  const emptyMarketDisplay = (
+    <div className="container mx-auto pt-12">
+      The market seems pretty empty right now...
+    </div>
+  );
+
   return (
     <div>
       <Banner title={"Marketplace"} />
-      <div className="container mx-auto pt-5">
-        <div className="flex flex-wrap">{cards}</div>
-      </div>
+      {cards.length > 0 ? cardDisplay : emptyMarketDisplay }
     </div>
   );
 }

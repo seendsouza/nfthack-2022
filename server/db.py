@@ -100,6 +100,21 @@ def rentAxiesWallet(db, axieWallet, renterAddress, time):
         },
     )
 
+def stopUsingAxie(db, axieWallet):
+    """
+    stop using axieWallet
+    """
+    db.axieWallets.update_one(
+        {"axieWalletAddress": axieWallet},
+        {
+            "$set": {
+                "renterAddress": "",
+                "rentedAt": 0,
+                "isCurrentlyUsed": False,
+            }
+        },
+    )
+
 
 def setAxieRentedAtTime(db, axieWallet, rentedAt):
     """
