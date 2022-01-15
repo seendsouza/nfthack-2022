@@ -1,35 +1,36 @@
 import { getLentAxies } from "../api";
 import { useQuery } from "react-query";
 import Card from "./Card";
+import type { Axie } from "../types";
+
+function useLentAxies() {
+  return useQuery<Axie[], Error>("lentAxies", async () => await getLentAxies());
+}
+
 function Marketplace() {
-  const query = useQuery("get-lent-lendings", getLentAxies);
+  const { data, error, isError, isLoading } = useLentAxies();
 
   function getAxieUrl(token: string) {
     return `https://storage.googleapis.com/assets.axieinfinity.com/axies/${token}/axie/axie-full-transparent.png`;
   }
+  if (isLoading) {
+    return <span>Loading...</span>;
+  }
 
-  console.log(query);
+  if (isError) {
+    return <span>Error: {error?.message}</span>;
+  }
 
-  return (
-    <div>
-      <h1>Marketplace</h1>
-      {query.data === undefined ? (
-        <div></div>
-      ) : (
-        <ul>
-          {query.data.map((lending) => {
-            <li key={lending.id}>
-              <Card
-                images={lending.tokenIds.map(getAxieUrl)}
-                tokenIds={lending.tokenIds}
-                lenderAddress={lending.lenderAddress}
-              />
-            </li>;
-          })}
-        </ul>
-      )}
-    </div>
-  );
+  const cards = data?.map((lending) => (
+    <Card
+      key={lending.id}
+      images={lending.tokenIds.map(getAxieUrl)}
+      tokenIds={lending.tokenIds}
+      lenderAddress={lending.lenderAddress}
+    />
+  ));
+  console.log(cards);
+  return <div>{cards}</div>;
 }
 
 export default Marketplace;

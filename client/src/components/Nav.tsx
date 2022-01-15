@@ -11,8 +11,8 @@ function Nav() {
   const navigation = [
     { name: "Home", href: "/", current: location.pathname == "/" },
     {
-      name: "Lender Dashboard",
-      href: "/lender-dashboard",
+      name: "Scholarships",
+      href: "/scholarships",
       current: location.pathname == "/lender-dashboard",
     },
     {
@@ -23,7 +23,7 @@ function Nav() {
   ];
 
   return (
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav" className="bg-black">
       {({ open }) => (
         <>
           <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -53,7 +53,7 @@ function Nav() {
                         )}
                         aria-current={item.current ? "page" : undefined}
                       >
-                        {item.name}
+                        {item.name.toUpperCase()}
                       </Link>
                     ))}
                   </div>
