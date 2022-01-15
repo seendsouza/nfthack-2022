@@ -42,8 +42,12 @@ def createWallet() -> Wallet:
 
     return Wallet(private_key, public_key, addr)
 
-# roning address should be of the following format: 0x3db763bbbb1ac900eb2eb8b106218f85f9f64a13
+# TODO: only returns 20 axies. Checked on: 0x7a904e39c0adf17f89da54a8edc7dc031fa4281a.
+# TODO: The address above has 38 axies, but only 20 are returned.
+# TODO: if you make a raw POST request in Postman, you will see that ['data']['axies']['total'] is correct at 38
+# ronin address should be of the following format: 0x3db763bbbb1ac900eb2eb8b106218f85f9f64a13
 def getAxiesIds(ronin_address: str):
+    axies = []
     query_all_axie_ids = {
         "operationName": "GetAxieLatest",
         "variables": {
@@ -53,8 +57,6 @@ def getAxiesIds(ronin_address: str):
     }
 
     r = requests.post(AXIES_API, json = query_all_axie_ids)
-
-    axies = []
 
     for x in range(0, len(r.json()['data']['axies']['results'])):
         axies.append(r.json()['data']['axies']['results'][x]['id'])
