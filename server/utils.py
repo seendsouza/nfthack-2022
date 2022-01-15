@@ -3,8 +3,8 @@ from secrets import token_bytes
 from coincurve import PublicKey
 from sha3 import keccak_256
 
-@dataclass
-class Wallet(frozen=True):
+@dataclass(frozen=True)
+class Wallet():
     private_key: bytes
     public_key: bytes
     addr: bytes
