@@ -3,11 +3,13 @@ import { classNames } from "../util";
 import { Tab } from "@headlessui/react";
 import Lendings from "./Lendings";
 import Rentings from "./Rentings";
+import Banner from "./Banner";
 
 function Scholarships() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   return (
     <div>
+      <Banner title={"Scholarships"} />
       <div className="w-full max-w-md px-2 py-16 sm:px-0 flex-col">
         <Tab.Group
           onChange={(index) => {
