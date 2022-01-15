@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { classNames } from "../util";
+import { useWeb3React } from "@web3-react/core";
+import { ethers } from "ethers";
 import { Tab } from "@headlessui/react";
 import Lendings from "./Lendings";
 import Rentings from "./Rentings";
 import Banner from "./Banner";
 
 function Scholarships() {
+  const { account } = useWeb3React();
   const [selectedIndex, setSelectedIndex] = useState(0);
   return (
     <div>
@@ -49,7 +52,10 @@ function Scholarships() {
             </Tab.Group>
           </div>
           <div className="ml-auto mr-8">
-            <button className="btn float-right text-sm py-4 px-6 bg-black text-white rounded">
+            <button
+              className="btn float-right text-sm py-4 px-6 bg-black text-white rounded disabled:bg-slate-600"
+              disabled={account === undefined || account === null}
+            >
               Lend Out Axies
             </button>
           </div>

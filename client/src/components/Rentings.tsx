@@ -2,6 +2,8 @@ import ScholarshipCard from "./ScholarshipCard";
 import { useQuery } from "react-query";
 import { getLentAxies } from "../api";
 import { getAxieUrl } from "../util";
+import { useWeb3React } from "@web3-react/core";
+import { ethers } from "ethers";
 import type { Axie } from "../types";
 
 function useRentedAxiesByKey(lenderAddress: string) {
@@ -13,7 +15,11 @@ function useRentedAxiesByKey(lenderAddress: string) {
 }
 
 function Rentings() {
-  const renterAddress = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045";
+  const { account } = useWeb3React<ethers.providers.BaseProvider>();
+  const renterAddress = account as string;
+  if (account === undefined) {
+    return <span>Connect wallet...</span>;
+  }
 
   const { data, error, isError, isLoading } =
     useRentedAxiesByKey(renterAddress);
