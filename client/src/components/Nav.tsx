@@ -20,7 +20,7 @@ const onClick = async () => {
   const instance = await web3Modal.connect();
 
   const provider = new ethers.providers.Web3Provider(instance);
-  useWalletStore().setProvider(provider);
+  useWalletStore.setState({ provider });
 };
 
 function Nav() {
