@@ -24,6 +24,10 @@ def startLending(lenderWallet):
     generate wallet, create axie account
     """
 
+    # TODO: This is not the correct flow. We generate the wallet, we show this wallet
+    # TODO: to the lender. They send their axies into this wallet, then we are back
+    # TODO: in this function
+
     newAxieWallet = createWallet()
     newAxieWalletAddr = '0x' + newAxieWallet.addr.hex()
 
