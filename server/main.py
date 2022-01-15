@@ -3,7 +3,7 @@ import string, time
 from flask import Flask, jsonify
 from pymongo import MongoClient
 from flask_cors import CORS
-from utils import cleanseAxieWalletData
+from utils import cleanseAxieWalletData, createAxieWallet as createWallet
 from db import getAvailableAxieWallets, deleteAxieWallet, createAxieWallet, addAxiesToWallet, \
     getAxieWallet, setAxieWalletUsage, getRentersAxieWallets, rentAxiesWallet
 from w3Connect import getAxiesInWallet, returnAxiesToOwner
@@ -24,8 +24,8 @@ def startLending(lenderWallet):
     generate wallet, create axie account
     """
 
-    # TODO: create ronin wallet to store axies and return wallet addr
-    newAxieWalletAddr = str(rand.randint(0, 1000000))
+    newAxieWallet = createWallet()
+    newAxieWalletAddr = '0x' + newAxieWallet.addr.hex()
 
     # TODO: create axie account and return axie account username/password
     (axieAccountUsername, axieAccountPassword) = (str(rand.randint(0, 100000)), str(rand.randint(0, 100000)))
