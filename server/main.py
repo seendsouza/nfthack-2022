@@ -26,7 +26,7 @@ def startLending(lenderWallet):
 
     return jsonify({
             "message": "started lending for " + lenderWallet,
-            "axieWallet": newAxieWalletAddr
+            "axieWalletAddr": newAxieWalletAddr
         })
 
 @app.route("/finish-transfer/<string:lenderWallet>/<string:axieWallet>")
@@ -87,6 +87,14 @@ def useAxieAccount(axieWallet):
                 "password": wallet["password"] # encrypted password??? it's fine, it's a hackathon
             }
         })
+
+@app.route("/clear-all")
+def clearAll():
+    """
+    clear all data from db
+    """
+    db.axieWallets.delete_many({})
+    return jsonify({"message": "cleared all data"})
 
 if __name__ == '__main__':
     app.run(debug=True)

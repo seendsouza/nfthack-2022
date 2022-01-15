@@ -4,3 +4,8 @@ export interface Axie {
   lenderAddress: string
   axieWalletAddr: string;
 }
+
+export interface LoginInfo {
+  username: string;
+  password: string;
+}
