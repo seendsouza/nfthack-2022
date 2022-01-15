@@ -3,10 +3,10 @@ import string, time
 from flask import Flask, jsonify
 from pymongo import MongoClient
 from flask_cors import CORS
-from utils import cleanseAxieWalletData, createWallet
+from utils import cleanseAxieWalletData, createWallet, getAxiesIds
 from db import getAvailableAxieWallets, deleteAxieWallet, createAxieWallet, addAxiesToWallet, \
     getAxieWallet, setAxieWalletUsage, getRentersAxieWallets, rentAxiesWallet
-from w3Connect import getAxiesInWallet, returnAxiesToOwner
+from w3Connect import returnAxiesToOwner
 
 app = Flask(__name__)
 CORS(app)
@@ -47,8 +47,8 @@ def finishTransfer(lenderWallet, axieWallet):
     user has transferred axies to account, update db with new data
     """
 
-    # TODO: get all axies now stored in given axie wallet, return array of axie token ids
-    axies = getAxiesInWallet(axieWallet)
+    # ! make sure the axieWallet is of the form: 0x3db763bbbb1ac900eb2eb8b106218f85f9f64a13
+    axies = getAxiesIds(axieWallet)
 
     # store token ids in db
     addAxiesToWallet(db, axieWallet, axies)

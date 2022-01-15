@@ -2,6 +2,11 @@ from dataclasses import dataclass
 from secrets import token_bytes
 from coincurve import PublicKey
 from sha3 import keccak_256
+import requests
+
+# ! consider moving to env vars
+AXIES_API = 'https://graphql-gateway.axieinfinity.com/graphql'
+
 
 @dataclass(frozen=True)
 class Wallet():
@@ -36,3 +41,22 @@ def createWallet() -> Wallet:
     # eth addr: 0x3db763bbbb1ac900eb2eb8b106218f85f9f64a13
 
     return Wallet(private_key, public_key, addr)
+
+# roning address should be of the following format: 0x3db763bbbb1ac900eb2eb8b106218f85f9f64a13
+def getAxiesIds(ronin_address: str):
+    query_all_axie_ids = {
+        "operationName": "GetAxieLatest",
+        "variables": {
+            'owner': ronin_address
+        },
+        "query": "query GetAxieLatest($auctionType: AuctionType, $criteria: AxieSearchCriteria, $from: Int, $sort: SortBy, $size: Int, $owner: String) {\n  axies(auctionType: $auctionType, criteria: $criteria, from: $from, sort: $sort, size: $size, owner: $owner) {\n    total\n    results {\n      ...AxieRowData\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment AxieRowData on Axie {\n  id\n  image\n  class\n  name\n  genes\n  owner\n  class\n  stage\n  title\n  breedCount\n  level\n  parts {\n    ...AxiePart\n    __typename\n  }\n  stats {\n    ...AxieStats\n    __typename\n  }\n  auction {\n    ...AxieAuction\n    __typename\n  }\n  __typename\n}\n\nfragment AxiePart on AxiePart {\n  id\n  name\n  class\n  type\n  specialGenes\n  stage\n  abilities {\n    ...AxieCardAbility\n    __typename\n  }\n  __typename\n}\n\nfragment AxieCardAbility on AxieCardAbility {\n  id\n  name\n  attack\n  defense\n  energy\n  description\n  backgroundUrl\n  effectIconUrl\n  __typename\n}\n\nfragment AxieStats on AxieStats {\n  hp\n  speed\n  skill\n  morale\n  __typename\n}\n\nfragment AxieAuction on Auction {\n  startingPrice\n  endingPrice\n  startingTimestamp\n  endingTimestamp\n  duration\n  timeLeft\n  currentPrice\n  currentPriceUSD\n  suggestedPrice\n  seller\n  listingIndex\n  state\n  __typename\n}\n"
+    }
+
+    r = requests.post(AXIES_API, json = query_all_axie_ids)
+
+    axies = []
+
+    for x in range(0, len(r.json()['data']['axies']['results'])):
+        axies.append(r.json()['data']['axies']['results'][x]['id'])
+
+    return axies
