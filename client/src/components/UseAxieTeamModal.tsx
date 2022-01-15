@@ -1,6 +1,6 @@
-import { Fragment, useRef, useState } from 'react';
-import { Dialog, Transition } from "@headlessui/react"
+import { Fragment, useRef, useEffect, useState } from 'react';
 import type { LoginInfo } from "../types";
+import { Dialog, Transition } from "@headlessui/react"
 
 type UseAxieTeamModalProps = {
     isOpen: boolean
@@ -8,8 +8,8 @@ type UseAxieTeamModalProps = {
     loginInfo: LoginInfo
 };
 
+
 function UseAxieTeamModal(props: UseAxieTeamModalProps) {
-  
   const cancelButtonRef = useRef(null)
 
   return (
@@ -52,9 +52,9 @@ function UseAxieTeamModal(props: UseAxieTeamModalProps) {
                       <p className="text-sm text-gray-500">
                         Here are the user names and passwords for the Axie Team.
                         <br />
-                        Username: 
+                        Username: {props.loginInfo.username}
                         <br />
-                        Password:
+                        Password: {props.loginInfo.password}
                       </p>
                     </div>
                   </div>

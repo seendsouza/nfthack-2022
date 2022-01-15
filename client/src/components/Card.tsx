@@ -1,31 +1,46 @@
 import { useState } from "react";
-import { useQuery } from "react-query";
-import UseAxieTeamModal from "./UseAxieTeamModal";
-import { rentAxies } from "../api.ts";
 import type { LoginInfo } from "../types";
+import { rentAxies } from "../api.ts";
+import UseAxieTeamModal from "./UseAxieTeamModal";
 
 const shortenAddress = (address: string) => {
   return `${address.slice(0, 6)}...${address.slice(-5, -1)}`;
 };
 
-function useAxieTeam(axieWalletAddress: string, renterWalletAddress: string) {
+/*
+function useAxieTeam(axieWalletAddress: string, renterWalletAddress: string): UseQueryResult<LoginInfo, Error>  {
   return useQuery<LoginInfo, Error>("axie-team", async () => await rentAxies(axieWalletAddress, renterWalletAddress));
 }
+*/
 
 type CardProps = {
   images: string[];
   tokenIds: string[];
   lenderAddress: string;
   axieWalletAddress: string;
+  updateLentAxies: () => Promise<void>;
 };
 
 function Card(props: CardProps) {
-  const { images, tokenIds, lenderAddress, axieWalletAddress } = props;
+  const { images, tokenIds, lenderAddress } = props;
   const [ useAxieModalOpen, setUseAxieModalOpen ] = useState(false);
+  const [loginInfo, setLoginInfo] = useState<LoginInfo>({
+    username: "",
+    password: ""
+  });
 
   const renterAddress: string = "hehexd";
 
-  const { data, error, isError, isLoading } = useAxieTeam(axieWalletAddress, renterAddress);
+  async function handleUseAxie() {
+    const loginInfoRes: LoginInfo = await rentAxies(props.axieWalletAddress, renterAddress);
+    setLoginInfo(loginInfoRes);
+    setUseAxieModalOpen(true);
+  }
+
+  async function handleClose(): Promise<void> {
+    setUseAxieModalOpen(false);
+    await props.updateLentAxies();
+  }
 
   return (
     <div className="w-fit md:w-1/2 xl:w-1/3 px-4 drop-shadow-lg">
@@ -55,15 +70,13 @@ function Card(props: CardProps) {
                      hover:border-primary hover:bg-primary
                      transition
                      "
-            onClick={() => {
-              setUseAxieModalOpen(true);
-            }}
+            onClick={handleUseAxie}
           >
             Use Axie Team
           </button>
         </div>
       </div>
-      <UseAxieTeamModal isOpen={useAxieModalOpen} hitClose={() => { setUseAxieModalOpen(false); }} loginInfo={data} />
+      <UseAxieTeamModal isOpen={useAxieModalOpen} hitClose={handleClose} loginInfo={loginInfo} />
     </div>
   );
 }
