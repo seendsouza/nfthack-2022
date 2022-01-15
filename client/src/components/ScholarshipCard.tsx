@@ -10,6 +10,7 @@ type CardProps = {
   lenderAddress?: string;
   isLending: boolean;
   axieWalletAddress: string;
+  updateRentedAxies: () => Promise<void>;
 };
 function ScholarshipCard(props: CardProps) {
   const {
@@ -22,6 +23,7 @@ function ScholarshipCard(props: CardProps) {
     isLending,
     lenderAddress,
     axieWalletAddress,
+    updateRentedAxies,
   } = props;
 
   function handleReturnAxie() {
@@ -30,6 +32,7 @@ function ScholarshipCard(props: CardProps) {
     } else {
       stopUsingAxie(axieWalletAddress);
     }
+    updateRentedAxies();
   }
 
   return (

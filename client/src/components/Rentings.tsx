@@ -1,10 +1,11 @@
 import ScholarshipCard from "./ScholarshipCard";
-import { useQuery } from "react-query";
+//import { useQuery } from "react-query";
 import { getRenterAxies } from "../api";
 import { getAxieUrl } from "../util";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import type { Axie } from "../types";
+import { useState, useEffect } from "react";
 
 
 function useRentedAxiesByKey(renterAddress: string) {
@@ -16,20 +17,32 @@ function useRentedAxiesByKey(renterAddress: string) {
 }
 
 function Rentings() {
+  const [rentedAxies, setRentedAxies] = useState<Axie[]>([]);
+
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const renterAddress = account as string;
 
-  const { data, error, isError, isLoading } =
-    useRentedAxiesByKey(renterAddress);
-
-  if (isLoading) {
-    return <span>Loading...</span>;
+  async function updateRentedAxies() {
+    const axies: Axie[] = await getRenterAxies(renterAddress);
+    setRentedAxies(axies);
   }
 
-  if (isError) {
-    return <span>Error: {error?.message}</span>;
-  }
-  const cards = data?.map((lending) => (
+  // const { data, error, isError, isLoading } =
+  //   useRentedAxiesByKey(renterAddress);
+
+  // if (isLoading) {
+  //   return <span>Loading...</span>;
+  // }
+
+  // if (isError) {
+  //   return <span>Error: {error?.message}</span>;
+  // }
+
+  useEffect(() => {
+    updateRentedAxies();
+  }, [renterAddress]);
+
+  const cards = rentedAxies?.map((lending) => (
     <ScholarshipCard
       key={lending.id}
       images={lending.tokenIds.map(getAxieUrl)}
@@ -41,6 +54,7 @@ function Rentings() {
       isLending={false}
       lenderAddress={lending.lenderAddress}
       axieWalletAddress={lending.axieWalletAddress}
+      updateRentedAxies={updateRentedAxies}
     />
   ));
 
