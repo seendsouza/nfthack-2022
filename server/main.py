@@ -102,8 +102,8 @@ def fakeInsert():
     insert fake data into db
     """
     db.axieWallets.insert_one({
-        "axieWalletAddress": str(rand.randint(0, 100000)),
-        "lenderAddress": str(rand.randint(0, 100000)),
+        "axieWalletAddress": ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(34)),
+        "lenderAddress": ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(34)),
         "username": "axie-username-"+str(rand.randint(0, 100000)),
         "password": "axie-password-"+str(rand.randint(0, 100000)),
         "tokenIds": [str(rand.randint(0, 100000)), str(rand.randint(0, 100000)), str(rand.randint(0, 100000))]

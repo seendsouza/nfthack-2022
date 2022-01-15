@@ -19,7 +19,7 @@ export const returnAxiesToOwner = async (axieWalletAddress: string): Promise<voi
 }
 
 export const getLentAxies = async (lenderWalletAddress?: string): Promise<Axie[]> => {
-  return fetch(`${serverUri}/list-lent-axies${lenderWalletAddress? `/${lenderWalletAddress}`: ""}`)
+  return fetch(`${serverUri}/list-lent-axies${lenderWalletAddress ? `/${lenderWalletAddress}` : ""}`)
     .then(res => res.json())
     .then(res => res.data);
 };
