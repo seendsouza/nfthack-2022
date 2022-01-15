@@ -1,12 +1,12 @@
-__version__ = '1.15.1'
+__version__ = "1.15.1"
 __all__ = [
-    'AxiePaymentsManager',
-    'AxieClaimsManager',
-    'AxieTransferManager',
-    'AxieMorphingManager',
-    'Axies',
-    'AxieBreedManager',
-    'QRCodeManager'
+    "AxiePaymentsManager",
+    "AxieClaimsManager",
+    "AxieTransferManager",
+    "AxieMorphingManager",
+    "Axies",
+    "AxieBreedManager",
+    "QRCodeManager",
 ]
 
 from axie.payments import AxiePaymentsManager

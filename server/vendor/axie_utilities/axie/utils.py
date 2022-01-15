@@ -10,8 +10,7 @@ from requests.packages.urllib3.util.retry import Retry
 from web3 import Web3
 
 
-
-USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1944.0 Safari/537.36" # noqa
+USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1944.0 Safari/537.36"  # noqa
 TIMEOUT_MINS = 5
 AXIE_CONTRACT = "0x32950db2a7164ae833121501c797d79e7b79d74c"
 AXS_CONTRACT = "0x97a9107c1793bc407d6f527b77e7fff4d812bece"
@@ -23,37 +22,25 @@ RETRIES = Retry(
     total=5,
     backoff_factor=2,
     status_forcelist=[500, 502, 503, 504],
-    allowed_methods=frozenset(['GET', 'POST'])
+    allowed_methods=frozenset(["GET", "POST"]),
 )
 BALANCE_ABI = [
     {
-      "constant": True,
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-          }
-      ],
-      "name": "balanceOf",
-      "outputs": [
-          {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-          }
-      ],
-      "payable": False,
-      "stateMutability": "view",
-      "type": "function"
+        "constant": True,
+        "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+        "name": "balanceOf",
+        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+        "payable": False,
+        "stateMutability": "view",
+        "type": "function",
     }
 ]
 
 
-def check_balance(account, token='slp'):
-    if token == 'slp':
+def check_balance(account, token="slp"):
+    if token == "slp":
         contract = SLP_CONTRACT
-    elif token == 'axs':
+    elif token == "axs":
         contract = AXS_CONTRACT
     elif token == "axies":
         contract = AXIE_CONTRACT
@@ -63,26 +50,37 @@ def check_balance(account, token='slp'):
         return 0
 
     w3 = Web3(
-            Web3.HTTPProvider(
-                RONIN_PROVIDER,
-                request_kwargs={"headers": {"content-type": "application/json", "user-agent": USER_AGENT}}))
-    ctr = w3.eth.contract(
-        address=Web3.toChecksumAddress(contract),
-        abi=BALANCE_ABI
+        Web3.HTTPProvider(
+            RONIN_PROVIDER,
+            request_kwargs={
+                "headers": {
+                    "content-type": "application/json",
+                    "user-agent": USER_AGENT,
+                }
+            },
+        )
     )
+    ctr = w3.eth.contract(address=Web3.toChecksumAddress(contract), abi=BALANCE_ABI)
     balance = ctr.functions.balanceOf(
         Web3.toChecksumAddress(account.replace("ronin:", "0x"))
     ).call()
-    if token == 'weth':
-        return float(balance/1000000000000000000)
+    if token == "weth":
+        return float(balance / 1000000000000000000)
     return int(balance)
 
 
 def get_nonce(account):
     w3 = Web3(
-            Web3.HTTPProvider(
-                RONIN_PROVIDER_FREE,
-                request_kwargs={"headers": {"content-type": "application/json", "user-agent": USER_AGENT}}))
+        Web3.HTTPProvider(
+            RONIN_PROVIDER_FREE,
+            request_kwargs={
+                "headers": {
+                    "content-type": "application/json",
+                    "user-agent": USER_AGENT,
+                }
+            },
+        )
+    )
     nonce = w3.eth.get_transaction_count(
         Web3.toChecksumAddress(account.replace("ronin:", "0x"))
     )
@@ -92,10 +90,11 @@ def get_nonce(account):
 def load_json(json_file):
     # This is a safe guard, it should never raise as we check this in the CLI.
     if not os.path.isfile(json_file):
-        raise Exception(f"File path {json_file} does not exist. "
-                        f"Please provide a correct one")
+        raise Exception(
+            f"File path {json_file} does not exist. " f"Please provide a correct one"
+        )
     try:
-        with open(json_file, encoding='utf-8') as f:
+        with open(json_file, encoding="utf-8") as f:
             data = json.load(f)
     except json.decoder.JSONDecodeError:
         raise Exception(f"File in path {json_file} is not a correctly encoded JSON.")
@@ -103,10 +102,11 @@ def load_json(json_file):
 
 
 class ImportantLogsFilter(logging.Filter):
-    """ Logging filter used to only keep important messages which will be
-    written to the log file """
+    """Logging filter used to only keep important messages which will be
+    written to the log file"""
+
     def filter(self, record):
-        return record.getMessage().startswith('Important:')
+        return record.getMessage().startswith("Important:")
 
 
 class Singleton:
@@ -114,8 +114,7 @@ class Singleton:
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
-            cls._instance = super(Singleton, cls).__new__(
-                                cls, *args, **kwargs)
+            cls._instance = super(Singleton, cls).__new__(cls, *args, **kwargs)
         return cls._instance
 
     def clear(cls):
@@ -127,19 +126,18 @@ class Singleton:
 
 
 class AxieGraphQL:
-
     def __init__(self, **kwargs):
-        self.account = kwargs.get('account').replace("ronin:", "0x")
-        self.private_key = kwargs.get('private_key')
+        self.account = kwargs.get("account").replace("ronin:", "0x")
+        self.private_key = kwargs.get("private_key")
         self.request = requests.Session()
-        self.request.mount('https://', HTTPAdapter(max_retries=RETRIES))
+        self.request.mount("https://", HTTPAdapter(max_retries=RETRIES))
         self.user_agent = USER_AGENT
 
     def create_random_msg(self):
         payload = {
             "operationName": "CreateRandomMessage",
             "variables": {},
-            "query": "mutation CreateRandomMessage{createRandomMessage}"
+            "query": "mutation CreateRandomMessage{createRandomMessage}",
         }
         url = "https://graphql-gateway.axieinfinity.com/graphql"
         try:
@@ -147,18 +145,22 @@ class AxieGraphQL:
         except RetryError as e:
             logging.critical(f"Error! Creating random msg! Error: {e}")
             return None
-        if (200 <= response.status_code <= 299 and response.json().get('data') and
-           response.json()['data'].get('createRandomMessage')):
-            return response.json()['data']['createRandomMessage']
+        if (
+            200 <= response.status_code <= 299
+            and response.json().get("data")
+            and response.json()["data"].get("createRandomMessage")
+        ):
+            return response.json()["data"]["createRandomMessage"]
         return None
 
     def get_jwt(self):
         msg = self.create_random_msg()
         if not msg:
             return None
-        signed_msg = Web3().eth.account.sign_message(encode_defunct(text=msg),
-                                                     private_key=self.private_key)
-        hex_msg = signed_msg['signature'].hex()
+        signed_msg = Web3().eth.account.sign_message(
+            encode_defunct(text=msg), private_key=self.private_key
+        )
+        hex_msg = signed_msg["signature"].hex()
         payload = {
             "operationName": "CreateAccessTokenWithSignature",
             "variables": {
@@ -166,24 +168,35 @@ class AxieGraphQL:
                     "mainnet": "ronin",
                     "owner": f"{self.account}",
                     "message": f"{msg}",
-                    "signature": f"{hex_msg}"
+                    "signature": f"{hex_msg}",
                 }
             },
             "query": "mutation CreateAccessTokenWithSignature($input: SignatureInput!)"
             "{createAccessTokenWithSignature(input: $input) "
-            "{newAccount result accessToken __typename}}"
+            "{newAccount result accessToken __typename}}",
         }
         url = "https://graphql-gateway.axieinfinity.com/graphql"
         try:
-            response = self.request.post(url, headers={"User-Agent": self.user_agent}, json=payload)
+            response = self.request.post(
+                url, headers={"User-Agent": self.user_agent}, json=payload
+            )
         except RetryError as e:
             logging.critical(f"Error! Getting JWT! Error: {e}")
             return None
         if 200 <= response.status_code <= 299:
-            if (not response.json().get('data') or not response.json()['data'].get('createAccessTokenWithSignature') or
-               not response.json()['data']['createAccessTokenWithSignature'].get('accessToken')):
-                logging.critical("Could not retreive JWT, probably your private key for this account is wrong. "
-                                 f"Account: {self.account.replace('0x','ronin:')} \n AccountName: {self.acc_name}")
+            if (
+                not response.json().get("data")
+                or not response.json()["data"].get("createAccessTokenWithSignature")
+                or not response.json()["data"]["createAccessTokenWithSignature"].get(
+                    "accessToken"
+                )
+            ):
+                logging.critical(
+                    "Could not retreive JWT, probably your private key for this account is wrong. "
+                    f"Account: {self.account.replace('0x','ronin:')} \n AccountName: {self.acc_name}"
+                )
                 return None
-            return response.json()['data']['createAccessTokenWithSignature']['accessToken']
+            return response.json()["data"]["createAccessTokenWithSignature"][
+                "accessToken"
+            ]
         return None

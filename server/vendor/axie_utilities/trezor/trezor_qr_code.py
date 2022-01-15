@@ -11,24 +11,27 @@ from trezor.trezor_utils import TrezorAxieGraphQL, CustomUI
 
 
 class TrezorQRCode(TrezorAxieGraphQL):
-
     def __init__(self, acc_name, path, **kwargs):
         self.acc_name = acc_name
-        self.path = os.path.join(path, f'{self.acc_name.lower()}-{int(datetime.timestamp(datetime.now()))}.png')
+        self.path = os.path.join(
+            path,
+            f"{self.acc_name.lower()}-{int(datetime.timestamp(datetime.now()))}.png",
+        )
         super().__init__(**kwargs)
 
     def generate_qr(self):
         jwt = self.get_jwt()
-        logging.info('Create QR Code')
+        logging.info("Create QR Code")
         qr = qrcode.make(jwt)
-        logging.info(f'Saving QR Code for account {self.acc_name} at {self.path}')
+        logging.info(f"Saving QR Code for account {self.acc_name} at {self.path}")
         qr.save(self.path)
 
 
 class TrezorQRCodeManager:
-
     def __init__(self, payments_file, trezor_config):
-        self.trezor_config, self.acc_names = self.load_trezor_config_and_acc_name(trezor_config, payments_file)
+        self.trezor_config, self.acc_names = self.load_trezor_config_and_acc_name(
+            trezor_config, payments_file
+        )
         self.path = os.path.dirname(trezor_config)
 
     def load_trezor_config_and_acc_name(self, trezor_config, payments_file):
@@ -36,10 +39,10 @@ class TrezorQRCodeManager:
         payments = load_json(payments_file)
         refined_config = {}
         acc_names = {}
-        for scholar in payments['Scholars']:
-            key = scholar['AccountAddress'].lower()
+        for scholar in payments["Scholars"]:
+            key = scholar["AccountAddress"].lower()
             refined_config[key] = config[key]
-            acc_names[key] = scholar['Name']
+            acc_names[key] = scholar["Name"]
         return refined_config, acc_names
 
     def verify_inputs(self):
@@ -60,10 +63,13 @@ class TrezorQRCodeManager:
             TrezorQRCode(
                 acc_name=self.acc_names[acc],
                 account=acc,
-                client=get_default_client(ui=CustomUI(passphrase=self.trezor_config[acc]['passphrase'])),
-                bip_path=self.trezor_config[acc]['bip_path'],
-                path=self.path
-            ) for acc in self.trezor_config
+                client=get_default_client(
+                    ui=CustomUI(passphrase=self.trezor_config[acc]["passphrase"])
+                ),
+                bip_path=self.trezor_config[acc]["bip_path"],
+                path=self.path,
+            )
+            for acc in self.trezor_config
         ]
         for qr in qrcode_list:
             qr.generate_qr()

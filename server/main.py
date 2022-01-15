@@ -4,13 +4,21 @@ from flask import Flask, jsonify
 from pymongo import MongoClient
 from flask_cors import CORS
 from utils import cleanseAxieWalletData, createWallet, getAxiesIds, Wallet
-from db import getAvailableAxieWallets, deleteAxieWallet, createAxieWallet, addAxiesToWallet, \
-    getAxieWallet, setAxieWalletUsage, getRentersAxieWallets, rentAxiesWallet
+from db import (
+    getAvailableAxieWallets,
+    deleteAxieWallet,
+    createAxieWallet,
+    addAxiesToWallet,
+    getAxieWallet,
+    setAxieWalletUsage,
+    getRentersAxieWallets,
+    rentAxiesWallet,
+)
 from w3Connect import returnAxiesToOwner
 
 app = Flask(__name__)
 CORS(app)
-client = MongoClient('localhost', 27017)
+client = MongoClient("localhost", 27017)
 db = client.axie
 
 ## Main Routes
@@ -18,7 +26,8 @@ db = client.axie
 # first start lending and initialize all the axie wallet stuff
 # then, once the user has added all the axies to it, we can finish transfer
 
-@app.route("/start-lending/<string:lenderWallet>", methods=['POST'])
+
+@app.route("/start-lending/<string:lenderWallet>", methods=["POST"])
 def startLending(lenderWallet):
     """
     generate wallet, create axie account
@@ -29,19 +38,29 @@ def startLending(lenderWallet):
     # TODO: in this function
 
     newAxieWallet = createWallet()
-    newAxieWalletAddr = '0x' + newAxieWallet.addr.hex()
+    newAxieWalletAddr = "0x" + newAxieWallet.addr.hex()
 
     # TODO: create axie account and return axie account username/password
-    (axieAccountUsername, axieAccountPassword) = (str(rand.randint(0, 100000)), str(rand.randint(0, 100000)))
+    (axieAccountUsername, axieAccountPassword) = (
+        str(rand.randint(0, 100000)),
+        str(rand.randint(0, 100000)),
+    )
 
-    createAxieWallet(db, newAxieWalletAddr, lenderWallet, axieAccountUsername, axieAccountPassword)
+    createAxieWallet(
+        db, newAxieWalletAddr, lenderWallet, axieAccountUsername, axieAccountPassword
+    )
 
-    return jsonify({
+    return jsonify(
+        {
             "message": "started lending for " + lenderWallet,
-            "axieWalletAddress": newAxieWalletAddr
-        })
+            "axieWalletAddress": newAxieWalletAddr,
+        }
+    )
 
-@app.route("/finish-transfer/<string:lenderWallet>/<string:axieWallet>" , methods=['POST'])
+
+@app.route(
+    "/finish-transfer/<string:lenderWallet>/<string:axieWallet>", methods=["POST"]
+)
 def finishTransfer(lenderWallet, axieWallet):
     """
     user has transferred axies to account, update db with new data
@@ -55,6 +74,7 @@ def finishTransfer(lenderWallet, axieWallet):
 
     return jsonify({"message": "finished transfer for " + lenderWallet})
 
+
 @app.route("/return-axies/<string:axieWallet>")
 def returnAxies(axieWallet):
     """
@@ -62,7 +82,7 @@ def returnAxies(axieWallet):
     """
 
     # TODO: this we pull from the db I think
-    wallet = Wallet(private_key=b'', public_key=b'', addr=b'')
+    wallet = Wallet(private_key=b"", public_key=b"", addr=b"")
     axieId = 0
 
     originalOwner = getAxieWallet(db, axieWallet)["lenderAddress"]
@@ -73,24 +93,23 @@ def returnAxies(axieWallet):
     # ! ^ this is not Solana, you can't delete a wallet :)
     # * deleting account, though, makes a lot of sense.
 
-    deleteAxieWallet(db, axieWallet) 
+    deleteAxieWallet(db, axieWallet)
     return jsonify({"message": "returned axies to " + originalOwner})
+
 
 @app.route("/list-lent-axies", defaults={"lenderAddress": None})
 @app.route("/list-lent-axies/<string:lenderAddress>")
 def listLentAxies(lenderAddress):
     """
-    returns a list of all the lent axie wallets, aka get all axie wallets that are available to be borrowed 
+    returns a list of all the lent axie wallets, aka get all axie wallets that are available to be borrowed
 
     if lenderAddress is given, returns only axie wallets that are from that lender
     """
     data = getAvailableAxieWallets(db, lenderAddress)
     cleanedData = cleanseAxieWalletData(list(data))
 
-    return jsonify({
-            "message": "list of axies lent out",
-            "data": cleanedData
-        })
+    return jsonify({"message": "list of axies lent out", "data": cleanedData})
+
 
 @app.route("/rent-axies/<string:axieWallet>/<string:renterAddress>")
 def rentAxies(axieWallet, renterAddress):
@@ -103,13 +122,18 @@ def rentAxies(axieWallet, renterAddress):
     if wallet is None:
         return jsonify({"message": "axie wallet not found"})
 
-    return jsonify({
-        "message": "axie account login info for " + axieWallet,
+    return jsonify(
+        {
+            "message": "axie account login info for " + axieWallet,
             "data": {
                 "username": wallet["username"],
-                "password": wallet["password"] # encrypted password??? it's fine, it's a hackathon
-            }
-        })
+                "password": wallet[
+                    "password"
+                ],  # encrypted password??? it's fine, it's a hackathon
+            },
+        }
+    )
+
 
 @app.route("/stop-using-axie/<string:axieWallet>")
 def stopUsingAxie(axieWallet):
@@ -120,6 +144,7 @@ def stopUsingAxie(axieWallet):
 
     return jsonify({"message": "stopped using axie account"})
 
+
 @app.route("/get-renter-axies/<string:renterAddress>")
 def getRenterAxies(renterAddress):
     """
@@ -128,10 +153,10 @@ def getRenterAxies(renterAddress):
     data = getRentersAxieWallets(db, renterAddress)
     cleaned_data = cleanseAxieWalletData(data)
 
-    return jsonify({
-            "message": "axies being rented by " + renterAddress,
-            "data": cleaned_data
-        })
+    return jsonify(
+        {"message": "axies being rented by " + renterAddress, "data": cleaned_data}
+    )
+
 
 ############################################################################################
 ## these are for testing/dev purposes
@@ -144,22 +169,41 @@ def clearAll():
     db.axieWallets.delete_many({})
     return jsonify({"message": "cleared all data"})
 
-@app.route("/fake-insert", methods=['POST'])
+
+@app.route("/fake-insert", methods=["POST"])
 def fakeInsert():
     """
     insert fake data into db
     """
-    db.axieWallets.insert_one({
-        "axieWalletAddress": "0x" +  ''.join(rand.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(32)),
-        "lenderAddress": "0x" + ''.join(rand.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(32)),
-        "username": "axie-username-"+str(rand.randint(0, 100000)),
-        "password": "axie-password-"+str(rand.randint(0, 100000)),
-        "tokenIds": [str(rand.randint(0, 100000)), str(rand.randint(0, 100000)), str(rand.randint(0, 100000))],
-        "isCurrentlyUsed": False,
-        "rentedAt": rand.randint(0, 100000)
-    })
+    db.axieWallets.insert_one(
+        {
+            "axieWalletAddress": "0x"
+            + "".join(
+                rand.choice(
+                    string.ascii_uppercase + string.ascii_lowercase + string.digits
+                )
+                for _ in range(32)
+            ),
+            "lenderAddress": "0x"
+            + "".join(
+                rand.choice(
+                    string.ascii_uppercase + string.ascii_lowercase + string.digits
+                )
+                for _ in range(32)
+            ),
+            "username": "axie-username-" + str(rand.randint(0, 100000)),
+            "password": "axie-password-" + str(rand.randint(0, 100000)),
+            "tokenIds": [
+                str(rand.randint(0, 100000)),
+                str(rand.randint(0, 100000)),
+                str(rand.randint(0, 100000)),
+            ],
+            "isCurrentlyUsed": False,
+            "rentedAt": rand.randint(0, 100000),
+        }
+    )
     return jsonify({"message": "inserted fake data"})
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)

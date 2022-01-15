@@ -13,18 +13,24 @@ class Axies:
         self.w3 = Web3(
             Web3.HTTPProvider(
                 RONIN_PROVIDER,
-                request_kwargs={"headers": {"content-type": "application/json", "user-agent": USER_AGENT}}))
+                request_kwargs={
+                    "headers": {
+                        "content-type": "application/json",
+                        "user-agent": USER_AGENT,
+                    }
+                },
+            )
+        )
         self.acc = account.replace("ronin:", "0x")
         with open("axie/axie_abi.json") as f:
             axie_abi = json.load(f)
         self.contract = self.w3.eth.contract(
-            address=Web3.toChecksumAddress(AXIE_CONTRACT),
-            abi=axie_abi
+            address=Web3.toChecksumAddress(AXIE_CONTRACT), abi=axie_abi
         )
         self.now = datetime.now()
 
     def number_of_axies(self):
-        return check_balance(self.acc, 'axies')
+        return check_balance(self.acc, "axies")
 
     def find_axies_to_morph(self):
         axie_list = self.get_axies()
@@ -32,7 +38,9 @@ class Axies:
         for axie in axie_list:
             morph_date, body_shape = self.get_morph_date_and_body(axie)
             if not morph_date and not body_shape:
-                logging.info(f"Something went wrong getting info for Axie {axie}, skipping it")
+                logging.info(
+                    f"Something went wrong getting info for Axie {axie}, skipping it"
+                )
             elif self.now >= morph_date and not body_shape:
                 axies.append(axie)
             elif not body_shape:
@@ -46,8 +54,7 @@ class Axies:
         axies = []
         for i in range(num_axies):
             axie = self.contract.functions.tokenOfOwnerByIndex(
-                _owner=Web3.toChecksumAddress(self.acc),
-                _index=i
+                _owner=Web3.toChecksumAddress(self.acc), _index=i
             ).call()
             axies.append(axie)
         return axies
@@ -55,11 +62,10 @@ class Axies:
     def get_morph_date_and_body(self, axie_id):
         payload = {
             "operationName": "GetAxieDetail",
-            "variables":
-                {"axieId": axie_id},
+            "variables": {"axieId": axie_id},
             "query": "query GetAxieDetail($axieId: ID!) { axie(axieId: $axieId) "
             "{ ...AxieDetail __typename}} fragment AxieDetail on Axie "
-            "{ id birthDate bodyShape __typename }"
+            "{ id birthDate bodyShape __typename }",
         }
         url = "https://graphql-gateway.axieinfinity.com/graphql"
         response = requests.post(url, json=payload)
@@ -69,8 +75,11 @@ class Axies:
             logging.debug("Response contains no json info")
             return None, None
 
-        if "data" in json_response and "axie" in json_response['data']:
-            if 'bodyShape' in json_response['data']['axie'] and 'birthDate' in json_response['data']['axie']:
+        if "data" in json_response and "axie" in json_response["data"]:
+            if (
+                "bodyShape" in json_response["data"]["axie"]
+                and "birthDate" in json_response["data"]["axie"]
+            ):
                 # In case we want to check correctly morphed
                 body_shape = json_response["data"]["axie"]["bodyShape"]
                 birth_date = json_response["data"]["axie"]["birthDate"]

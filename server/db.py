@@ -16,21 +16,38 @@ axie-wallets
 ]
 """
 
+
 def createAxieWallet(db, axieWalletAddr, lenderAddress, username, password):
     """
     initialize axie wallet in database
     """
-    db.axieWallets.insert_one({"axieWalletAddress": axieWalletAddr, "lenderAddress": lenderAddress, "tokenIds": [], "isCurrentlyUsed": False, "username": username, "password": password})
+    db.axieWallets.insert_one(
+        {
+            "axieWalletAddress": axieWalletAddr,
+            "lenderAddress": lenderAddress,
+            "tokenIds": [],
+            "isCurrentlyUsed": False,
+            "username": username,
+            "password": password,
+        }
+    )
+
 
 def addAxiesToWallet(db, axieWalletAddr, axies):
     """
     add axies to axieWallet
     """
-    db.axieWallets.update_one({"axieWalletAddress": axieWalletAddr,}, {"$push": {"tokenIds": {"$each": axies}}})
+    db.axieWallets.update_one(
+        {
+            "axieWalletAddress": axieWalletAddr,
+        },
+        {"$push": {"tokenIds": {"$each": axies}}},
+    )
 
-def getAvailableAxieWallets(db, ownerWallet = None):
+
+def getAvailableAxieWallets(db, ownerWallet=None):
     """
-    Returns a list of all AxieWallets 
+    Returns a list of all AxieWallets
     if owner is specificed, only returns AxieWallets owned by that owner
     """
     if ownerWallet:
@@ -38,11 +55,13 @@ def getAvailableAxieWallets(db, ownerWallet = None):
     else:
         return db.axieWallets.find()
 
+
 def deleteAxieWallet(db, axieWallet):
     """
     deletes AxieWallet from database
     """
     db.axieWallets.delete_one({"axieWalletAddress": axieWallet})
+
 
 def getAxieWallet(db, axieWallet):
     """
@@ -50,21 +69,38 @@ def getAxieWallet(db, axieWallet):
     """
     return db.axieWallets.find_one({"axieWalletAddress": axieWallet})
 
+
 def rentAxiesWallet(db, axieWallet, renterAddress, time):
     """
     rent axies from axieWallet
     """
-    db.axieWallets.update_one({"axieWalletAddress": axieWallet}, {"$set": {"renterAddress": renterAddress, "rentedAt": time, "isCurrentlyUsed": True}})
-        
+    db.axieWallets.update_one(
+        {"axieWalletAddress": axieWallet},
+        {
+            "$set": {
+                "renterAddress": renterAddress,
+                "rentedAt": time,
+                "isCurrentlyUsed": True,
+            }
+        },
+    )
+
 
 def setAxieRentedAtTime(db, axieWallet, rentedAt):
     """
     sets the rentedAt time of an axieWallet
     """
-    db.axieWallets.update_one({"axieWalletAddress": axieWallet}, {"$set": {"rentedAt": rentedAt}})
+    db.axieWallets.update_one(
+        {"axieWalletAddress": axieWallet}, {"$set": {"rentedAt": rentedAt}}
+    )
+
 
 def setAxieWalletUsage(db, axieWallet, axieWalletUsage):
-    return db.axieWallets.update_one({"axieWalletAddress": axieWallet}, {"$set": {"isCurrentlyUsed": axieWalletUsage}})
+    return db.axieWallets.update_one(
+        {"axieWalletAddress": axieWallet},
+        {"$set": {"isCurrentlyUsed": axieWalletUsage}},
+    )
+
 
 def getRentersAxieWallets(db, renterAddress):
     """

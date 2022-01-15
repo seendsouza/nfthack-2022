@@ -21,20 +21,19 @@ class CustomUI(ClickUI):
 
 
 class TrezorAxieGraphQL:
-
     def __init__(self, **kwargs):
-        self.account = kwargs.get('account').replace("ronin:", "0x")
+        self.account = kwargs.get("account").replace("ronin:", "0x")
         self.request = requests.Session()
-        self.request.mount('https://', HTTPAdapter(max_retries=RETRIES))
+        self.request.mount("https://", HTTPAdapter(max_retries=RETRIES))
         self.user_agent = USER_AGENT
-        self.client = kwargs.get('client')
-        self.bip_path = parse_path(kwargs.get('bip_path'))
+        self.client = kwargs.get("client")
+        self.bip_path = parse_path(kwargs.get("bip_path"))
 
     def create_random_msg(self):
         payload = {
             "operationName": "CreateRandomMessage",
             "variables": {},
-            "query": "mutation CreateRandomMessage{createRandomMessage}"
+            "query": "mutation CreateRandomMessage{createRandomMessage}",
         }
         url = "https://graphql-gateway.axieinfinity.com/graphql"
         try:
@@ -42,9 +41,12 @@ class TrezorAxieGraphQL:
         except RetryError as e:
             logging.critical(f"Error! Creating random msg! Error: {e}")
             return None
-        if (200 <= response.status_code <= 299 and response.json().get('data') and
-           response.json()['data'].get('createRandomMessage')):
-            return response.json()['data']['createRandomMessage']
+        if (
+            200 <= response.status_code <= 299
+            and response.json().get("data")
+            and response.json()["data"].get("createRandomMessage")
+        ):
+            return response.json()["data"]["createRandomMessage"]
         return None
 
     def get_jwt(self):
@@ -60,24 +62,35 @@ class TrezorAxieGraphQL:
                     "mainnet": "ronin",
                     "owner": f"{self.account}",
                     "message": f"{msg}",
-                    "signature": f"{hex_msg}"
+                    "signature": f"{hex_msg}",
                 }
             },
             "query": "mutation CreateAccessTokenWithSignature($input: SignatureInput!)"
             "{createAccessTokenWithSignature(input: $input) "
-            "{newAccount result accessToken __typename}}"
+            "{newAccount result accessToken __typename}}",
         }
         url = "https://graphql-gateway.axieinfinity.com/graphql"
         try:
-            response = self.request.post(url, headers={"User-Agent": self.user_agent}, json=payload)
+            response = self.request.post(
+                url, headers={"User-Agent": self.user_agent}, json=payload
+            )
         except RetryError as e:
             logging.critical(f"Error! Getting JWT! Error: {e}")
             return None
         if 200 <= response.status_code <= 299:
-            if (not response.json().get('data') or not response.json()['data'].get('createAccessTokenWithSignature') or
-               not response.json()['data']['createAccessTokenWithSignature'].get('accessToken')):
-                logging.critical("Could not retreive JWT, probably your private key for this account is wrong. "
-                                 f"Account: {self.account.replace('0x','ronin:')} \n AccountName: {self.acc_name}")
+            if (
+                not response.json().get("data")
+                or not response.json()["data"].get("createAccessTokenWithSignature")
+                or not response.json()["data"]["createAccessTokenWithSignature"].get(
+                    "accessToken"
+                )
+            ):
+                logging.critical(
+                    "Could not retreive JWT, probably your private key for this account is wrong. "
+                    f"Account: {self.account.replace('0x','ronin:')} \n AccountName: {self.acc_name}"
+                )
                 return None
-            return response.json()['data']['createAccessTokenWithSignature']['accessToken']
+            return response.json()["data"]["createAccessTokenWithSignature"][
+                "accessToken"
+            ]
         return None

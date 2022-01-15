@@ -1,12 +1,12 @@
-__version__ = '1.15.1'
+__version__ = "1.15.1"
 __all__ = [
-    'TrezorAccountsSetup',
-    'TrezorAxiePaymentsManager',
-    'TrezorAxieBreedManager',
-    'TrezorAxieClaimsManager',
-    'TrezorAxieTransferManager',
-    'TrezorAxieMorphingManager',
-    'TrezorQRCodeManager'
+    "TrezorAccountsSetup",
+    "TrezorAxiePaymentsManager",
+    "TrezorAxieBreedManager",
+    "TrezorAxieClaimsManager",
+    "TrezorAxieTransferManager",
+    "TrezorAxieMorphingManager",
+    "TrezorQRCodeManager",
 ]
 
 from trezor.trezor_setup import TrezorAccountsSetup

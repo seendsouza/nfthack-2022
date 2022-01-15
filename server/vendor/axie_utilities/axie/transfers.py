@@ -17,15 +17,15 @@ from axie.utils import (
     RONIN_PROVIDER_FREE,
     AXIE_CONTRACT,
     TIMEOUT_MINS,
-    USER_AGENT
+    USER_AGENT,
 )
 
 
 now = int(datetime.now().timestamp())
-log_file = f'logs/results_{now}.log'
+log_file = f"logs/results_{now}.log"
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-file_handler = logging.FileHandler(log_file, mode='w')
+file_handler = logging.FileHandler(log_file, mode="w")
 file_handler.setLevel(logging.INFO)
 file_handler.addFilter(ImportantLogsFilter())
 logger.addHandler(file_handler)
@@ -36,7 +36,14 @@ class Transfer:
         self.w3 = Web3(
             Web3.HTTPProvider(
                 RONIN_PROVIDER_FREE,
-                request_kwargs={"headers": {"content-type": "application/json", "user-agent": USER_AGENT}}))
+                request_kwargs={
+                    "headers": {
+                        "content-type": "application/json",
+                        "user-agent": USER_AGENT,
+                    }
+                },
+            )
+        )
         self.from_acc = from_acc.replace("ronin:", "0x")
         self.from_private = from_private
         self.to_acc = to_acc.replace("ronin:", "0x")
@@ -44,11 +51,10 @@ class Transfer:
 
     def execute(self):
         # Load ABI
-        with open('axie/axie_abi.json', encoding='utf-8') as f:
+        with open("axie/axie_abi.json", encoding="utf-8") as f:
             axie_abi = json.load(f)
         axie_contract = self.w3.eth.contract(
-            address=Web3.toChecksumAddress(AXIE_CONTRACT),
-            abi=axie_abi
+            address=Web3.toChecksumAddress(AXIE_CONTRACT), abi=axie_abi
         )
         # Get Nonce
         nonce = get_nonce(self.from_acc)
@@ -56,18 +62,19 @@ class Transfer:
         transaction = axie_contract.functions.safeTransferFrom(
             Web3.toChecksumAddress(self.from_acc),
             Web3.toChecksumAddress(self.to_acc),
-            self.axie_id
-        ).buildTransaction({
-            "chainId": 2020,
-            "gas": 492874,
-            "gasPrice": self.w3.toWei("0", "gwei"),
-            "value": 0,
-            "nonce": nonce
-        })
+            self.axie_id,
+        ).buildTransaction(
+            {
+                "chainId": 2020,
+                "gas": 492874,
+                "gasPrice": self.w3.toWei("0", "gwei"),
+                "value": 0,
+                "nonce": nonce,
+            }
+        )
         # Sign Transaction
         signed = self.w3.eth.account.sign_transaction(
-            transaction,
-            private_key=self.from_private
+            transaction, private_key=self.from_private
         )
         # Send raw transaction
         self.w3.eth.send_raw_transaction(signed.rawTransaction)
@@ -89,18 +96,24 @@ class Transfer:
                     success = False
                 break
             except exceptions.TransactionNotFound:
-                logging.info(f"Waiting for transfer '{self}' to finish (Nonce:{nonce})...")
+                logging.info(
+                    f"Waiting for transfer '{self}' to finish (Nonce:{nonce})..."
+                )
                 # Sleep 10 seconds not to constantly send requests!
                 sleep(10)
         if success:
-            logging.info(f"Important: {self} completed! Hash: {hash} - "
-                         f"Explorer: https://explorer.roninchain.com/tx/{str(hash)}")
+            logging.info(
+                f"Important: {self} completed! Hash: {hash} - "
+                f"Explorer: https://explorer.roninchain.com/tx/{str(hash)}"
+            )
         else:
             logging.info(f"Important: {self} failed")
 
     def __str__(self):
-        return (f"Axie Transfer of axie ({self.axie_id}) from account ({self.from_acc.replace('0x', 'ronin:')}) "
-                f"to account ({self.to_acc.replace('0x', 'ronin:')})")
+        return (
+            f"Axie Transfer of axie ({self.axie_id}) from account ({self.from_acc.replace('0x', 'ronin:')}) "
+            f"to account ({self.to_acc.replace('0x', 'ronin:')})"
+        )
 
 
 class AxieTransferManager:
@@ -116,24 +129,34 @@ class AxieTransferManager:
         try:
             validate(self.transfers_file, transfers_schema)
         except ValidationError as ex:
-            logging.critical("Transfers file failed validation. Please review it. "
-                             f"Error given: {ex.message}. "
-                             f"For attribute in: {list(ex.path)}")
+            logging.critical(
+                "Transfers file failed validation. Please review it. "
+                f"Error given: {ex.message}. "
+                f"For attribute in: {list(ex.path)}"
+            )
             validation_success = False
         # Check we have private keys for all accounts
         for acc in self.transfers_file:
             if acc["AccountAddress"] not in self.secrets_file:
-                logging.critical(f"Account '{acc['AccountAddress']}' is not present in secret file, please add it.")
+                logging.critical(
+                    f"Account '{acc['AccountAddress']}' is not present in secret file, please add it."
+                )
                 validation_success = False
         for sf in self.secrets_file:
             if len(self.secrets_file[sf]) != 66 or self.secrets_file[sf][:2] != "0x":
-                logging.critical(f"Private key for account {sf} is not valid, please review it!")
+                logging.critical(
+                    f"Private key for account {sf} is not valid, please review it!"
+                )
                 validation_success = False
         if not validation_success:
-            logging.critical("Please make sure your transfers.json file looks like the one in the README.md\n"
-                             "Find it here: https://ferranmarin.github.io/axie-scholar-utilities/")
-            logging.critical("If your problem is with secrets.json, "
-                             "delete it and re-generate the file starting with an empty secrets file.")
+            logging.critical(
+                "Please make sure your transfers.json file looks like the one in the README.md\n"
+                "Find it here: https://ferranmarin.github.io/axie-scholar-utilities/"
+            )
+            logging.critical(
+                "If your problem is with secrets.json, "
+                "delete it and re-generate the file starting with an empty secrets file."
+            )
             sys.exit()
         logging.info("Files correctly validated!")
 
@@ -141,23 +164,29 @@ class AxieTransferManager:
         transfers = []
         logging.info("Preparing transfers")
         for acc in self.transfers_file:
-            axies_in_acc = Axies(acc['AccountAddress']).get_axies()
-            for axie in acc['Transfers']:
-                if not self.secure or (self.secure and axie['ReceiverAddress'] in self.secrets_file):
+            axies_in_acc = Axies(acc["AccountAddress"]).get_axies()
+            for axie in acc["Transfers"]:
+                if not self.secure or (
+                    self.secure and axie["ReceiverAddress"] in self.secrets_file
+                ):
                     # Check axie in account
-                    if axie['AxieId'] in axies_in_acc:
+                    if axie["AxieId"] in axies_in_acc:
                         t = Transfer(
-                            to_acc=axie['ReceiverAddress'],
-                            from_private=self.secrets_file[acc['AccountAddress']],
-                            from_acc=acc['AccountAddress'],
-                            axie_id=axie['AxieId']
+                            to_acc=axie["ReceiverAddress"],
+                            from_private=self.secrets_file[acc["AccountAddress"]],
+                            from_acc=acc["AccountAddress"],
+                            axie_id=axie["AxieId"],
                         )
                         transfers.append(t)
                         logging.info(f"Added transaction to the list: {t}")
                     else:
-                        logging.info(f"Axie ({axie['AxieId']}) not in account ({acc['AccountAddress']}), skipping.")
+                        logging.info(
+                            f"Axie ({axie['AxieId']}) not in account ({acc['AccountAddress']}), skipping."
+                        )
                 else:
-                    logging.info(f"Receiver address {axie['ReceiverAddress']} not in secrets.json, skipping transfer.")
+                    logging.info(
+                        f"Receiver address {axie['ReceiverAddress']} not in secrets.json, skipping transfer."
+                    )
         self.execute_transfers(transfers)
 
     def execute_transfers(self, transfers):

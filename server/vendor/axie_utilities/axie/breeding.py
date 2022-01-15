@@ -17,16 +17,16 @@ from axie.utils import (
     check_balance,
     TIMEOUT_MINS,
     ImportantLogsFilter,
-    USER_AGENT
+    USER_AGENT,
 )
 from axie.payments import Payment, PaymentsSummary, CREATOR_FEE_ADDRESS
 
 
 now = int(datetime.now().timestamp())
-log_file = f'logs/results_{now}.log'
+log_file = f"logs/results_{now}.log"
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-file_handler = logging.FileHandler(log_file, mode='w', encoding='utf-8')
+file_handler = logging.FileHandler(log_file, mode="w", encoding="utf-8")
 file_handler.setLevel(logging.INFO)
 file_handler.addFilter(ImportantLogsFilter())
 logger.addHandler(file_handler)
@@ -37,7 +37,14 @@ class Breed:
         self.w3 = Web3(
             Web3.HTTPProvider(
                 RONIN_PROVIDER_FREE,
-                request_kwargs={"headers": {"content-type": "application/json", "user-agent": USER_AGENT}}))
+                request_kwargs={
+                    "headers": {
+                        "content-type": "application/json",
+                        "user-agent": USER_AGENT,
+                    }
+                },
+            )
+        )
         self.sire_axie = sire_axie
         self.matron_axie = matron_axie
         self.address = address.replace("ronin:", "0x")
@@ -48,25 +55,24 @@ class Breed:
         with open("axie/axie_abi.json") as f:
             axie_abi = json.load(f)
         axie_contract = self.w3.eth.contract(
-            address=Web3.toChecksumAddress(AXIE_CONTRACT),
-            abi=axie_abi
+            address=Web3.toChecksumAddress(AXIE_CONTRACT), abi=axie_abi
         )
         # Get Nonce
         nonce = get_nonce(self.address)
         # Build transaction
         transaction = axie_contract.functions.breedAxies(
-            self.sire_axie,
-            self.matron_axie
-        ).buildTransaction({
-            "chainId": 2020,
-            "gas": 492874,
-            "gasPrice": self.w3.toWei("0", "gwei"),
-            "nonce": nonce
-        })
+            self.sire_axie, self.matron_axie
+        ).buildTransaction(
+            {
+                "chainId": 2020,
+                "gas": 492874,
+                "gasPrice": self.w3.toWei("0", "gwei"),
+                "nonce": nonce,
+            }
+        )
         # Sign transaction
         signed = self.w3.eth.account.sign_transaction(
-            transaction,
-            private_key=self.private_key
+            transaction, private_key=self.private_key
         )
         # Send raw transaction
         self.w3.eth.send_raw_transaction(signed.rawTransaction)
@@ -91,7 +97,9 @@ class Breed:
             except exceptions.TransactionNotFound:
                 # Sleep 10s while waiting
                 sleep(10)
-                logging.info(f"Waiting for transactions '{self}' to finish (Nonce: {nonce})...")
+                logging.info(
+                    f"Waiting for transactions '{self}' to finish (Nonce: {nonce})..."
+                )
 
         if success:
             logging.info(f"Important: {self} completed successfully")
@@ -99,8 +107,10 @@ class Breed:
             logging.info(f"Important: {self} failed")
 
     def __str__(self):
-        return (f"Breeding axie {self.sire_axie} with {self.matron_axie} in account "
-                f"{self.address.replace('0x', 'ronin:')}")
+        return (
+            f"Breeding axie {self.sire_axie} with {self.matron_axie} in account "
+            f"{self.address.replace('0x', 'ronin:')}"
+        )
 
 
 class AxieBreedManager:
@@ -116,15 +126,21 @@ class AxieBreedManager:
         try:
             validate(self.breeding_file, breeding_schema)
         except ValidationError as ex:
-            logging.critical(f'Validation of breeding file failed. Error given: {ex.message}\n'
-                             f'For attribute in: {list(ex.path)}')
+            logging.critical(
+                f"Validation of breeding file failed. Error given: {ex.message}\n"
+                f"For attribute in: {list(ex.path)}"
+            )
             validation_error = True
         for acc in self.breeding_file:
-            if acc['AccountAddress'] not in self.secrets:
-                logging.critical(f"Account '{acc['AccountAddress']}' is not present in secret file, please add it.")
+            if acc["AccountAddress"] not in self.secrets:
+                logging.critical(
+                    f"Account '{acc['AccountAddress']}' is not present in secret file, please add it."
+                )
                 validation_error = True
         if self.payment_account not in self.secrets:
-            logging.critical(f"Payment account '{self.payment_account}' is not present in secret file, please add it.")
+            logging.critical(
+                f"Payment account '{self.payment_account}' is not present in secret file, please add it."
+            )
             validation_error = True
         if validation_error:
             sys.exit()
@@ -156,15 +172,17 @@ class AxieBreedManager:
         logging.info("About to start breeding axies")
         for bf in self.breeding_file:
             b = Breed(
-                sire_axie=bf['Sire'],
-                matron_axie=bf['Matron'],
-                address=bf['AccountAddress'],
-                private_key=self.secrets[bf['AccountAddress']]
+                sire_axie=bf["Sire"],
+                matron_axie=bf["Matron"],
+                address=bf["AccountAddress"],
+                private_key=self.secrets[bf["AccountAddress"]],
             )
             b.execute()
         logging.info("Done breeding axies")
         fee = self.calculate_fee_cost()
-        logging.info(f"Time to pay the fee for breeding. For this session it is: {fee} SLP")
+        logging.info(
+            f"Time to pay the fee for breeding. For this session it is: {fee} SLP"
+        )
         p = Payment(
             "Breeding Fee",
             "donation",
@@ -172,6 +190,6 @@ class AxieBreedManager:
             self.secrets[self.payment_account],
             CREATOR_FEE_ADDRESS,
             fee,
-            PaymentsSummary()
+            PaymentsSummary(),
         )
         p.execute()

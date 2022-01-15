@@ -11,6 +11,8 @@ def returnAxiesToOwner(axieWallet: Wallet, ownerWalletAddr: str, axieId: int):
     return axies in axieWalletAddr back to ownerWalletAddr
     """
 
-    transfer = Transfer('0x' + axieWallet.addr.hex(), axieWallet.private_key, ownerWalletAddr, axieId)
+    transfer = Transfer(
+        "0x" + axieWallet.addr.hex(), axieWallet.private_key, ownerWalletAddr, axieId
+    )
 
     transfer.execute()
