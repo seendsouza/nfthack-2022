@@ -2,10 +2,8 @@ import { Link } from "react-router-dom";
 import { Disclosure } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { useLocation } from "react-router-dom";
+import { classNames } from "../util";
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
 function Nav() {
   const location = useLocation();
   const navigation = [
