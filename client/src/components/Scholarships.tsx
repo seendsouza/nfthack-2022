@@ -6,10 +6,15 @@ import { Tab } from "@headlessui/react";
 import Lendings from "./Lendings";
 import Rentings from "./Rentings";
 import Banner from "./Banner";
+import LendModal from "./LendModal";
 
 function Scholarships() {
-  const { account } = useWeb3React();
+  const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const onClick = () => {
+    setIsOpen(true);
+  };
   return (
     <div>
       <Banner title={"Scholarships"} />
@@ -54,6 +59,7 @@ function Scholarships() {
           <div className="ml-auto mr-8">
             <button
               className="btn float-right text-sm py-4 px-6 bg-black text-white rounded disabled:bg-slate-600"
+              onClick={onClick}
               disabled={account === undefined || account === null}
             >
               Lend Out Axies
@@ -66,6 +72,7 @@ function Scholarships() {
           </div>
         </div>
       </div>
+      <LendModal isOpen={isOpen} />
     </div>
   );
 }

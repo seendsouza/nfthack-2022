@@ -8,7 +8,7 @@ import { ethers } from "ethers";
 import { InjectedConnector } from "@web3-react/injected-connector";
 
 function Nav() {
-  const { account, activate } = useWeb3React<ethers.providers.BaseProvider>();
+  const { account, activate } = useWeb3React<ethers.providers.Web3Provider>();
   const onClick = () => {
     const injected = new InjectedConnector({ supportedChainIds: [2020] });
     activate(injected);

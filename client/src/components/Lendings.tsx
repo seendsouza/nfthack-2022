@@ -14,7 +14,7 @@ function useLentAxiesByKey(lenderAddress: string) {
 }
 
 function Lendings() {
-  const { account } = useWeb3React<ethers.providers.BaseProvider>();
+  const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const lenderAddress = account as string;
   if (account === undefined) {
     return <span>Connect wallet...</span>;
