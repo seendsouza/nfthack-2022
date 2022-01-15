@@ -3,7 +3,8 @@ def cleanseAxieWalletData(data):
     remove sensitive like username and password
     """
     return list(map(lambda axieWallet: { 
-            "wallet": axieWallet["wallet"], 
-            "owner-wallet": axieWallet["owner-wallet"], 
-            "contained-axies": axieWallet["contained-axies"]
+            "id": str(axieWallet["_id"]),
+            "axieWalletAddr": axieWallet["axieWalletAddr"],
+            "lenderAddress": axieWallet["lenderAddress"],
+            "tokenIds": axieWallet["tokenIds"],
         }, data))

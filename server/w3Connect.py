@@ -1,3 +1,4 @@
+import random as rand
 from web3 import Web3
 
 def getAxiesInWallet(walletAddress):
@@ -5,7 +6,7 @@ def getAxiesInWallet(walletAddress):
     padding = "000000000000000000000000"
     data = methodSignature + padding + walletAddress[2:]
 
-    print(data)
+    #print(data)
 
     # body = {
     #     "method": "ethCall",
@@ -15,7 +16,7 @@ def getAxiesInWallet(walletAddress):
     # }
 
     # url = "https://cloudflare-eth.com/"
-    return []
+    return [rand.randint(10001, 50000), rand.randint(10001, 50000), rand.randint(10001, 50000)]
 
 def returnAxiesToOwner(axieWalletAddr, ownerWalletAddr):
     """

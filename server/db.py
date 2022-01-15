@@ -4,29 +4,29 @@ from pymongo import MongoClient
 axie-wallets
 [
   {
-    "wallet": String,
-    "owner-wallet": String,
-    "contained-axies": [String],
+    "axieWalletAddr": String,
+    "lenderAddress": String,
+    "tokenIds": [String],
     "username": String,
     "password": String,
   }
 ]
 """
 
-def createAxieWallet(db, wallet, ownerWallet, username, password):
-    db.axieWallets.insertOne({"wallet": wallet, "owner-wallet": ownerWallet, "contained-axies": [], "username": username, "password": password})
+def createAxieWallet(db, axieWalletAddr, lenderAddress, username, password):
+    db.axieWallets.insert_one({"axieWalletAddr": axieWalletAddr, "lenderAddress": lenderAddress, "tokenIds": [], "username": username, "password": password})
 
-def addAxiesToWallet(db, axieWallet, axies):
-    db.axieWallets.updateOne({"wallet": axieWallet,}, {"$push": {"contained-axies": {"$each": axies}}})
+def addAxiesToWallet(db, axieWalletAddr, axies):
+    db.axieWallets.update_one({"axieWalletAddr": axieWalletAddr,}, {"$push": {"tokenIds": {"$each": axies}}})
 
-def getAvailableAxieWallets(db):
-    return db.axieWallets.find()
-
-def getAvailableAxieWallets(db, ownerWallet):
-    return db.axieWallets.find({"owner-wallet": ownerWallet})
+def getAvailableAxieWallets(db, ownerWallet = None):
+    if ownerWallet:
+        return db.axieWallets.find({"lenderAddress": ownerWallet})
+    else:
+        return db.axieWallets.find()
 
 def deleteAxieWallet(db, axieWallet):
-    db.axieWallets.deleteOne({"wallet": axieWallet})
+    db.axieWallets.delete_one({"axieWalletAddr": axieWallet})
 
 def getAxieWallet(db, axieWallet):
-    return db.axieWallets.findOne({"wallet": axieWallet})
+    return db.axieWallets.find_one({"axieWalletAddr": axieWallet})
