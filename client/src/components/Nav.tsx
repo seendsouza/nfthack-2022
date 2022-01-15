@@ -4,6 +4,25 @@ import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { useLocation } from "react-router-dom";
 import { classNames } from "../util";
 
+import { ethers } from "ethers";
+import { useWalletStore } from "../state";
+
+import Web3Modal from "web3modal";
+
+const onClick = async () => {
+  const providerOptions = {};
+  const web3Modal = new Web3Modal({
+    network: "mainnet", // optional
+    cacheProvider: true, // optional
+    providerOptions, // required
+  });
+
+  const instance = await web3Modal.connect();
+
+  const provider = new ethers.providers.Web3Provider(instance);
+  useWalletStore().setProvider(provider);
+};
+
 function Nav() {
   const location = useLocation();
   const navigation = [
@@ -56,6 +75,16 @@ function Nav() {
                     ))}
                   </div>
                 </div>
+              </div>
+
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                <button
+                  type="button"
+                  className="px-6 py-2 text-sm bg-gray-800 p-1 rounded-full text-white font-medium focus:outline-none"
+                  onClick={onClick}
+                >
+                  CONNECT WALLET
+                </button>
               </div>
             </div>
           </div>
