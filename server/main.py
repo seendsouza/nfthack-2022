@@ -3,7 +3,7 @@ import string, time
 from flask import Flask, jsonify
 from pymongo import MongoClient
 from flask_cors import CORS
-from utils import cleanseAxieWalletData, createWallet, getAxiesIds
+from utils import cleanseAxieWalletData, createWallet, getAxiesIds, Wallet
 from db import getAvailableAxieWallets, deleteAxieWallet, createAxieWallet, addAxiesToWallet, \
     getAxieWallet, setAxieWalletUsage, getRentersAxieWallets, rentAxiesWallet
 from w3Connect import returnAxiesToOwner
@@ -61,10 +61,13 @@ def returnAxies(axieWallet):
     return the axies to their original owner
     """
 
+    # TODO: this we pull from the db I think
+    wallet = Wallet(private_key=b'', public_key=b'', addr=b'')
+    axieId = 0
+
     originalOwner = getAxieWallet(db, axieWallet)["lenderAddress"]
 
-    # TODO: return axies to original owner
-    returnAxiesToOwner(axieWallet, originalOwner)
+    returnAxiesToOwner(wallet, originalOwner, axieId)
 
     # TODO: delete axie wallet and axie account?
     # ! ^ this is not Solana, you can't delete a wallet :)
