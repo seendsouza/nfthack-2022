@@ -71,7 +71,9 @@ def returnAxies(axieWallet):
 @app.route("/list-lent-axies/<string:lenderAddress>")
 def listLentAxies(lenderAddress):
     """
-    returns a list of all the axie wallets that are available to be borrowed and belong to the given owner
+    returns a list of all the lent axie wallets, aka get all axie wallets that are available to be borrowed 
+
+    if lenderAddress is given, returns only axie wallets that are from that lender
     """
     data = getAvailableAxieWallets(db, lenderAddress)
     cleanedData = cleanseAxieWalletData(list(data))
@@ -103,7 +105,7 @@ def rentAxies(axieWallet, renterAddress):
 @app.route("/stop-using-axie/<string:axieWallet>")
 def stopUsingAxie(axieWallet):
     """
-    stop using axie account
+    stop using axie account, set axie wallet to be available for other renters
     """
     setAxieWalletUsage(db, axieWallet, False)
 
@@ -112,7 +114,7 @@ def stopUsingAxie(axieWallet):
 @app.route("/get-renter-axies/<string:renterAddress>")
 def getRenterAxies(renterAddress):
     """
-    get axies that are currently being rented
+    get axies that are currently being rented by a given renter
     """
     data = getRentersAxieWallets(db, renterAddress)
     cleaned_data = cleanseAxieWalletData(data)
