@@ -96,6 +96,20 @@ def clearAll():
     db.axieWallets.delete_many({})
     return jsonify({"message": "cleared all data"})
 
+@app.route("/fake-insert", methods=['POST'])
+def fakeInsert():
+    """
+    insert fake data into db
+    """
+    db.axieWallets.insert_one({
+        "axieWalletAddress": str(rand.randint(0, 100000)),
+        "lenderAddress": str(rand.randint(0, 100000)),
+        "username": "axie-username-"+str(rand.randint(0, 100000)),
+        "password": "axie-password-"+str(rand.randint(0, 100000)),
+        "tokenIds": [str(rand.randint(0, 100000)), str(rand.randint(0, 100000)), str(rand.randint(0, 100000))]
+    })
+    return jsonify({"message": "inserted fake data"})
+
 if __name__ == '__main__':
     app.run(debug=True)
 

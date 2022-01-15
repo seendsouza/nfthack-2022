@@ -13,18 +13,18 @@ export const finishTransfer = async (lenderWalletAddress: string, axieWalletAddr
     .then(() => {return;});
 }
 
-export const returnAxies = async (axieWalletAddress: string): Promise<void> => {
+export const returnAxiesToOwner = async (axieWalletAddress: string): Promise<void> => {
   return fetch(`${serverUri}/return-axies/${axieWalletAddress}`)
     .then(() => {return;});
 }
 
-export const getLentAxies = async (): Promise<Axie[]> => {
-  return fetch(`${serverUri}/list-lent-axies`)
+export const getLentAxies = async (lenderWalletAddress?: string): Promise<Axie[]> => {
+  return fetch(`${serverUri}/list-lent-axies${lenderWalletAddress? `/${lenderWalletAddress}`: ""}`)
     .then(res => res.json())
     .then(res => res.data);
 };
 
-export const useAxieAccount = async (axieWalletAddress: string): Promise<LoginInfo> => {
+export const getAxieAccount = async (axieWalletAddress: string): Promise<LoginInfo> => {
   return fetch(`${serverUri}/get-axie-account-info/${axieWalletAddress}`)
     .then(res => res.json())
     .then(res => res.data);

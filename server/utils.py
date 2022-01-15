@@ -4,7 +4,7 @@ def cleanseAxieWalletData(data):
     """
     return list(map(lambda axieWallet: { 
             "id": str(axieWallet["_id"]),
-            "axieWalletAddr": axieWallet["axieWalletAddr"],
+            "axieWalletAddress": axieWallet["axieWalletAddress"],
             "lenderAddress": axieWallet["lenderAddress"],
             "tokenIds": axieWallet["tokenIds"],
         }, data))

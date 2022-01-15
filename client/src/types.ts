@@ -2,7 +2,7 @@ export interface Axie {
   id: string;
   tokenIds: string[]
   lenderAddress: string
-  axieWalletAddr: string;
+  axieWalletAddress: string;
 }
 
 export interface LoginInfo {
