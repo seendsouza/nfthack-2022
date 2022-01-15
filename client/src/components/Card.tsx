@@ -11,13 +11,13 @@ function Card(props: CardProps) {
   const { images, tokenIds, lenderAddress } = props;
   return (
     <div className="w-fit md:w-1/2 xl:w-1/3 px-4 drop-shadow-lg">
-      <div className="bg-white rounded-lg overflow-hidden mb-10">
-        <div className="h-screen max-h-60 max-w-md  border-2 m-3 flex justify-center items-center">
-          <img src={images[0]} alt="Axie" className="h-[75%] mt-[2.5rem]" />
-          <img src={images[1]} alt="Axie" className="h-[75%] -mx-[8rem] -mt-[3rem]" />
-          <img src={images[2]} alt="Axie" className="h-[75%] mt-[2.5rem]" />
+      <div className="bg-white rounded-lg overflow-hidden mb-10 flex flex-col items-center">
+        <div className="h-screen max-h-72 max-w-md m-3 flex justify-center items-center">
+          <img src={images[0]} alt="Axie" className="h-[55%] mt-[2.5rem]" />
+          <img src={images[1]} alt="Axie" className="h-[55%] -mx-[9rem] -mt-[3rem]" />
+          <img src={images[2]} alt="Axie" className="h-[55%] mt-[2.5rem]" />
         </div>
-        <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
+        <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center -mt-6">
           <p className="text-base text-body-color leading-relaxed mb-7">
             <strong>Token IDs:</strong>{" "}
             {tokenIds.map((t: string) => "#" + t.toString()).join(", ")}
