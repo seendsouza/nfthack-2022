@@ -3,6 +3,7 @@ import { getLentAxies } from "../api";
 import { useState, useEffect } from "react";
 import Card from "./Card";
 import type { Axie } from "../types";
+import Banner from "./Banner";
 
 /*
 function useLentAxies() {
@@ -35,20 +36,27 @@ function Marketplace() {
   }
   */
 
-  const cards = lentAxies.filter(c => !c.isCurrentlyUsed).map((lending) => (
-    <Card
-      key={lending.id}
-      images={lending.tokenIds.map(getAxieUrl)}
-      tokenIds={lending.tokenIds}
-      lenderAddress={lending.lenderAddress}
-      axieWalletAddress={lending.axieWalletAddress}
-      updateLentAxies={updateAvailableAxies}
-    />
-  ));
+  const cards = lentAxies
+    .filter((c) => !c.isCurrentlyUsed)
+    .map((lending) => (
+      <Card
+        key={lending.id}
+        images={lending.tokenIds.map(getAxieUrl)}
+        tokenIds={lending.tokenIds}
+        lenderAddress={lending.lenderAddress}
+        axieWalletAddress={lending.axieWalletAddress}
+        updateLentAxies={updateAvailableAxies}
+      />
+    ));
   console.log(cards);
-  return <div className="container mx-auto pt-5"> 
-          <div className="flex flex-wrap">{cards}</div>
-         </div>;
+  return (
+    <div>
+      <Banner title={"Marketplace"} />
+      <div className="container mx-auto pt-5">
+        <div className="flex flex-wrap">{cards}</div>
+      </div>
+    </div>
+  );
 }
 
 export default Marketplace;
