@@ -201,6 +201,7 @@ def fakeInsert():
                 )
                 for _ in range(32)
             ),
+            "renterAddress": "",
             "username": "axie-username-" + str(rand.randint(0, 100000)),
             "password": "axie-password-" + str(rand.randint(0, 100000)),
             "tokenIds": [

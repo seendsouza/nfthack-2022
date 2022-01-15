@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { LoginInfo } from "../types";
 import { rentAxies } from "../api.ts";
 import UseAxieTeamModal from "./UseAxieTeamModal";
+import { useWeb3React } from "@web3-react/core";
 
 const shortenAddress = (address: string) => {
   return `${address.slice(0, 6)}...${address.slice(-5, -1)}`;
@@ -22,6 +23,9 @@ type CardProps = {
 };
 
 function Card(props: CardProps) {
+  const { account } = useWeb3React<ethers.providers.Web3Provider>();
+  const renterAddress = account as string;
+
   const { images, tokenIds, lenderAddress } = props;
   const [ useAxieModalOpen, setUseAxieModalOpen ] = useState(false);
   const [loginInfo, setLoginInfo] = useState<LoginInfo>({
@@ -29,9 +33,12 @@ function Card(props: CardProps) {
     password: ""
   });
 
-  const renterAddress: string = "hehexd";
-
   async function handleUseAxie() {
+    if (!renterAddress) {
+      alert("Please connect wallet");
+      return;
+    }
+
     const loginInfoRes: LoginInfo = await rentAxies(props.axieWalletAddress, renterAddress);
     setLoginInfo(loginInfoRes);
     setUseAxieModalOpen(true);

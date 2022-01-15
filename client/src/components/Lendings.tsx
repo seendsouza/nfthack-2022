@@ -7,6 +7,15 @@ import { getAxieUrl } from "../util";
 import type { Axie } from "../types";
 
 function useLentAxiesByKey(lenderAddress: string) {
+  if (!lenderAddress) {
+    return {
+      data: [],
+      error: null,
+      isError: false,
+      isLoading: false,
+    };
+  }
+
   return useQuery<Axie[], Error>(
     "lentAxies",
     async () => await getLentAxies(lenderAddress)

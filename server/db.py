@@ -29,6 +29,7 @@ def createAxieWallet(db, axieWalletAddr, lenderAddress, username, password):
             "isCurrentlyUsed": False,
             "username": "",
             "password": "",
+            "renterAddress": "",
         }
     )
 
