@@ -4,6 +4,15 @@ import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import AxieCard from "./AxieCard";
 import axieAbi from "../axieAbi";
+import { getAxiesInWallet, startLending, finishTransfer } from "../api";
+import { useQuery } from "react-query";
+
+function useMyAxies(walletAddress: string) {
+  return useQuery<string[], Error>(
+    "myAxies",
+    async () => await getAxiesInWallet(walletAddress)
+  );
+}
 
 type LendModalProps = {
   isOpen: boolean;
@@ -13,10 +22,12 @@ const AXIE_CONTRACT_ADDRESS = "";
 
 function LendModal(props: LendModalProps) {
   const { account, library } = useWeb3React<ethers.providers.Web3Provider>();
-  // TODO: Get axies by wallet address
-  // TODO: Determine Axie type
-  const axies: any[] = [];
-  const sendAxiesToWallet = async (axies: any[], toWalletAddress: string) => {
+  const { data } = useMyAxies(account as string);
+  const axies = data === undefined ? [] : data;
+  const sendAxiesToWallet = async (
+    axies: string[],
+    toWalletAddress: string
+  ) => {
     const contract = new ethers.Contract(
       AXIE_CONTRACT_ADDRESS,
       axieAbi,
@@ -26,17 +37,19 @@ function LendModal(props: LendModalProps) {
       await contract.safeTransferFrom(
         ethers.utils.getAddress(account as string),
         ethers.utils.getAddress(toWalletAddress),
-        axie.tokenId
+        axie
       );
     }
   };
-  const [picked, setPicked] = useState<any[]>([]);
+  const [picked, setPicked] = useState<string[]>([]);
 
   const onClick = async () => {
-    // TODO: Get wallet address to send Axies to
+    // Get wallet address to send Axies to
+    const axieWalletAddress = await startLending(account as string);
     const toWalletAddress = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045";
     await sendAxiesToWallet(axies, toWalletAddress);
-    // TODO:: Tell backend we're done
+    // Tell backend we're done
+    await finishTransfer(account as string, axieWalletAddress);
   };
 
   return (
