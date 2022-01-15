@@ -20,7 +20,7 @@ function ScholarshipCard(props: CardProps) {
     lenderAddress,
   } = props;
   return (
-    <div className="w-full md:w-1/2 xl:w-1/3 border border-grey">
+    <div className="w-full md:w-1/2 xl:w-1/3 border border-grey rounded-lg">
       <div className="bg-white rounded-lg overflow-hidden mb-2 px-4">
         <div className="flex w-full items-center">
           <div className="flex flex-row w-2/3 justify-center">
@@ -28,16 +28,16 @@ function ScholarshipCard(props: CardProps) {
             <img src={images[1]} alt="Axie" className="w-1/3" />
             <img src={images[2]} alt="Axie" className="w-1/3" />
           </div>
-          <div className="w-1/3">#{lendingId}</div>
+          <div className="w-1/3 font-bold text-slate-400">#{lendingId}</div>
         </div>
-        <div className="w-full flex flex-row text-slate-400 text-left">
+        <div className="w-full flex flex-row text-slate-400 font-bold mt-2">
           <div className="w-1/3">Rented At</div>
           <div className="w-1/3">Profits</div>
           <div className="w-1/3">Split</div>
         </div>
-        <div className="w-full flex flex-row text-slate-400 text-left py-2">
+        <div className="w-full flex flex-row text-slate-400 py-2">
           <div className="w-1/3">
-            {rentedAt ? rentedAt.toDateString() : "-"}
+            {rentedAt ? rentedAt.toISOString().slice(0, 10) : "-"}
           </div>
           <div className="w-1/3">
             {revenue} {currency}
@@ -59,6 +59,7 @@ function ScholarshipCard(props: CardProps) {
                      py-2
                      px-7
                      rounded-lg
+                     rounded-t-none
                      bg-black 
                      text-base
                      text-white
