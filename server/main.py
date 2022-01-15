@@ -11,7 +11,7 @@ CORS(app)
 client = MongoClient('localhost', 27017)
 db = client.axie
 
-@app.route("/start-lending/<string:lenderWallet>")
+@app.route("/start-lending/<string:lenderWallet>", methods=['POST'])
 def startLending(lenderWallet):
     """
     generate wallet, create axie account
@@ -26,10 +26,10 @@ def startLending(lenderWallet):
 
     return jsonify({
             "message": "started lending for " + lenderWallet,
-            "axieWalletAddr": newAxieWalletAddr
+            "axieWalletAddress": newAxieWalletAddr
         })
 
-@app.route("/finish-transfer/<string:lenderWallet>/<string:axieWallet>")
+@app.route("/finish-transfer/<string:lenderWallet>/<string:axieWallet>" , methods=['POST'])
 def finishTransfer(lenderWallet, axieWallet):
     """
     user has transfered axies to account, update db with new data
@@ -70,8 +70,8 @@ def listLentAxies(lenderAddress):
             "data": cleanedData
         })
 
-@app.route("/use-axie-account/<string:axieWallet>")
-def useAxieAccount(axieWallet):
+@app.route("/get-axie-account-info/<string:axieWallet>")
+def getAxieAccountInfo(axieWallet):
     """
     get axie account login info
     """
