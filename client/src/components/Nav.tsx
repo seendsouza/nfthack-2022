@@ -20,7 +20,7 @@ function Nav() {
     {
       name: "Scholarships",
       href: "/scholarships",
-      current: location.pathname == "/lender-dashboard",
+      current: location.pathname == "/scholarships",
     },
     {
       name: "Marketplace",
