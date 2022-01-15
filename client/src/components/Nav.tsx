@@ -3,27 +3,17 @@ import { Disclosure } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { useLocation } from "react-router-dom";
 import { classNames } from "../util";
-
+import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
-import { useWalletStore } from "../state";
-
-import Web3Modal from "web3modal";
-
-const onClick = async () => {
-  const providerOptions = {};
-  const web3Modal = new Web3Modal({
-    network: "mainnet", // optional
-    cacheProvider: true, // optional
-    providerOptions, // required
-  });
-
-  const instance = await web3Modal.connect();
-
-  const provider = new ethers.providers.Web3Provider(instance);
-  useWalletStore.setState({ provider });
-};
+import { InjectedConnector } from "@web3-react/injected-connector";
 
 function Nav() {
+  const { account, activate } = useWeb3React<ethers.providers.BaseProvider>();
+  const onClick = () => {
+    const injected = new InjectedConnector({ supportedChainIds: [2020] });
+    activate(injected);
+  };
+
   const location = useLocation();
   const navigation = [
     { name: "Home", href: "/", current: location.pathname == "/" },
@@ -83,7 +73,7 @@ function Nav() {
                   className="px-6 py-2 text-sm bg-gray-800 p-1 rounded-full text-white font-medium focus:outline-none"
                   onClick={onClick}
                 >
-                  CONNECT WALLET
+                  {account ? account : " CONNECT WALLET"}
                 </button>
               </div>
             </div>
