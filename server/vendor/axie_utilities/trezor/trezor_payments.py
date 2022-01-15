@@ -14,7 +14,7 @@ from web3 import Web3, exceptions
 
 from axie.payments import PaymentsSummary
 from axie.schemas import payments_percent_schema
-from axie.utils import (
+.utils import (
     check_balance,
     get_nonce,
     load_json,

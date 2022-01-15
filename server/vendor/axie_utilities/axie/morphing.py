@@ -6,7 +6,7 @@ from eth_account.messages import encode_defunct
 from requests.exceptions import RetryError
 from web3 import Web3
 
-from axie.utils import load_json, AxieGraphQL, ImportantLogsFilter
+from .utils import load_json, AxieGraphQL, ImportantLogsFilter
 
 
 now = int(datetime.now().timestamp())

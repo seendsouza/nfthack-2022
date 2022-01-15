@@ -8,7 +8,7 @@ from trezorlib import ethereum
 from trezorlib.ui import ClickUI
 from trezorlib.tools import parse_path
 
-from axie.utils import RETRIES, USER_AGENT
+.utils import RETRIES, USER_AGENT
 
 
 class CustomUI(ClickUI):

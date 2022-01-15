@@ -9,7 +9,7 @@ from requests.exceptions import RetryError
 from web3 import Web3, exceptions
 import requests
 
-from axie.utils import (
+from .utils import (
     check_balance,
     get_nonce,
     load_json,

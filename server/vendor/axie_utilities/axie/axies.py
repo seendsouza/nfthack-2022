@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from web3 import Web3
 import requests
 
-from axie.utils import check_balance, RONIN_PROVIDER, AXIE_CONTRACT, USER_AGENT
+from .utils import check_balance, RONIN_PROVIDER, AXIE_CONTRACT, USER_AGENT
 
 
 class Axies:

@@ -7,7 +7,7 @@ from mock import patch, mock_open, call
 from axie import AxieBreedManager
 from axie.breeding import Breed, AXIE_CONTRACT
 from axie.payments import PaymentsSummary, CREATOR_FEE_ADDRESS
-from axie.utils import RONIN_PROVIDER_FREE, USER_AGENT
+.utils import RONIN_PROVIDER_FREE, USER_AGENT
 
 
 @patch("axie.breeding.load_json", return_value={"foo": "bar"})

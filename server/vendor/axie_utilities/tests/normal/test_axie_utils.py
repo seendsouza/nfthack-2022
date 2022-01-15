@@ -1,7 +1,7 @@
 import pytest
 from mock import patch, call
 
-from axie.utils import (
+.utils import (
     check_balance,
     load_json,
     get_nonce,

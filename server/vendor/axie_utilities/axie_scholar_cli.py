@@ -31,7 +31,7 @@ import logging
 
 from docopt import docopt
 
-from axie import (
+from . import (
     AxiePaymentsManager,
     AxieClaimsManager,
     AxieTransferManager,
@@ -40,7 +40,7 @@ from axie import (
     AxieBreedManager,
     QRCodeManager,
 )
-from axie.utils import load_json
+from .utils import load_json
 
 # Setup logger
 os.makedirs("logs", exist_ok=True)

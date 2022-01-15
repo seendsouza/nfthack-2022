@@ -9,7 +9,7 @@ import pytest
 
 from axie import AxiePaymentsManager
 from axie.payments import Payment, PaymentsSummary
-from axie.utils import SLP_CONTRACT
+.utils import SLP_CONTRACT
 from tests.test_utils import LOG_FILE_PATH, cleanup_log_file
 
 

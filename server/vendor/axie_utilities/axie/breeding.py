@@ -8,8 +8,8 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 from web3 import Web3, exceptions
 
-from axie.schemas import breeding_schema
-from axie.utils import (
+from .schemas import breeding_schema
+from .utils import (
     get_nonce,
     load_json,
     RONIN_PROVIDER_FREE,
@@ -19,7 +19,7 @@ from axie.utils import (
     ImportantLogsFilter,
     USER_AGENT,
 )
-from axie.payments import Payment, PaymentsSummary, CREATOR_FEE_ADDRESS
+from .payments import Payment, PaymentsSummary, CREATOR_FEE_ADDRESS
 
 
 now = int(datetime.now().timestamp())

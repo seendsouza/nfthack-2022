@@ -7,7 +7,7 @@ from mock import patch, mock_open, call
 from trezor import TrezorAxieBreedManager
 from trezor.trezor_breeding import TrezorBreed, AXIE_CONTRACT
 from axie.payments import CREATOR_FEE_ADDRESS, PaymentsSummary
-from axie.utils import RONIN_PROVIDER_FREE, USER_AGENT
+.utils import RONIN_PROVIDER_FREE, USER_AGENT
 
 
 @patch("trezor.trezor_breeding.load_json", return_value={"foo": "bar"})

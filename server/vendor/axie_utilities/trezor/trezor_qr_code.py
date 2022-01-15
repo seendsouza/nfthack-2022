@@ -6,7 +6,7 @@ from datetime import datetime
 from trezorlib.client import get_default_client
 import qrcode
 
-from axie.utils import load_json
+.utils import load_json
 from trezor.trezor_utils import TrezorAxieGraphQL, CustomUI
 
 

@@ -10,7 +10,7 @@ import pytest
 from trezor import TrezorAxiePaymentsManager
 from trezor.trezor_payments import TrezorPayment
 from axie.payments import PaymentsSummary
-from axie.utils import SLP_CONTRACT
+.utils import SLP_CONTRACT
 from tests.test_utils import LOG_FILE_PATH, cleanup_log_file
 
 

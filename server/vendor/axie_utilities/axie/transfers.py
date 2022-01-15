@@ -8,9 +8,9 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 from web3 import Web3, exceptions
 
-from axie.schemas import transfers_schema
-from axie.axies import Axies
-from axie.utils import (
+from .schemas import transfers_schema
+from .axies import Axies
+from .utils import (
     get_nonce,
     load_json,
     ImportantLogsFilter,

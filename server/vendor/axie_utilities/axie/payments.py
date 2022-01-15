@@ -8,8 +8,8 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 from web3 import Web3, exceptions
 
-from axie.schemas import payments_schema, payments_percent_schema
-from axie.utils import (
+from .schemas import payments_schema, payments_percent_schema
+from .utils import (
     check_balance,
     get_nonce,
     load_json,

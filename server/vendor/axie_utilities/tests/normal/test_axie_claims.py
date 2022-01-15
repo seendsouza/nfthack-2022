@@ -12,7 +12,7 @@ from eth_account.messages import encode_defunct
 
 from axie import AxieClaimsManager
 from axie.claims import Claim
-from axie.utils import SLP_CONTRACT, RONIN_PROVIDER_FREE, USER_AGENT
+.utils import SLP_CONTRACT, RONIN_PROVIDER_FREE, USER_AGENT
 from tests.test_utils import async_cleanup_log_file, LOG_FILE_PATH
 
 

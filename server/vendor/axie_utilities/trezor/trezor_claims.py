@@ -11,7 +11,7 @@ import requests
 from trezorlib.client import get_default_client
 from trezorlib import ethereum
 
-from axie.utils import (
+.utils import (
     check_balance,
     get_nonce,
     load_json,

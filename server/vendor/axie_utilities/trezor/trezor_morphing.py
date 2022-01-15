@@ -7,7 +7,7 @@ from trezorlib import ethereum
 from trezorlib.client import get_default_client
 from requests.exceptions import RetryError
 
-from axie.utils import load_json, ImportantLogsFilter
+.utils import load_json, ImportantLogsFilter
 from trezor.trezor_utils import TrezorAxieGraphQL, CustomUI
 
 now = int(datetime.now().timestamp())

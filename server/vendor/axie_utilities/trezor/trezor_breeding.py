@@ -13,7 +13,7 @@ from trezorlib.tools import parse_path
 from trezorlib import ethereum
 
 from axie.schemas import breeding_schema
-from axie.utils import (
+.utils import (
     get_nonce,
     load_json,
     RONIN_PROVIDER_FREE,
@@ -23,7 +23,7 @@ from axie.utils import (
     ImportantLogsFilter,
 )
 from axie.payments import PaymentsSummary, CREATOR_FEE_ADDRESS
-from axie.utils import USER_AGENT
+.utils import USER_AGENT
 from trezor.trezor_payments import TrezorPayment
 from trezor.trezor_utils import CustomUI
 

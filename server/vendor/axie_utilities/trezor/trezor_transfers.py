@@ -14,7 +14,7 @@ from trezorlib import ethereum
 
 from axie.schemas import transfers_schema
 from axie.axies import Axies
-from axie.utils import (
+.utils import (
     get_nonce,
     load_json,
     ImportantLogsFilter,

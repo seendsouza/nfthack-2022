@@ -7,7 +7,7 @@ import requests_mock
 import pytest
 
 from axie import Axies
-from axie.utils import AXIE_CONTRACT, RONIN_PROVIDER, USER_AGENT
+.utils import AXIE_CONTRACT, RONIN_PROVIDER, USER_AGENT
 
 
 @freeze_time("2021-01-14 01:10:05")
