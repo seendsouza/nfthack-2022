@@ -16,7 +16,7 @@ def getAxiesInWallet(walletAddress):
     # }
 
     # url = "https://cloudflare-eth.com/"
-    return [rand.randint(10001, 50000), rand.randint(10001, 50000), rand.randint(10001, 50000)]
+    return [str(rand.randint(10001, 50000)), str(rand.randint(10001, 50000)), str(rand.randint(10001, 50000))]
 
 def returnAxiesToOwner(axieWalletAddr, ownerWalletAddr):
     """

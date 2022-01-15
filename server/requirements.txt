@@ -1,3 +1,4 @@
 flask
 pymongo
 web3
+flask-cors

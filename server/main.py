@@ -1,11 +1,13 @@
 import random as rand
 from flask import Flask, jsonify
 from pymongo import MongoClient
+from flask_cors import CORS
 from utils import cleanseAxieWalletData
 from db import getAvailableAxieWallets, deleteAxieWallet, createAxieWallet, addAxiesToWallet, getAxieWallet
 from w3Connect import getAxiesInWallet, returnAxiesToOwner
 
 app = Flask(__name__)
+CORS(app)
 client = MongoClient('localhost', 27017)
 db = client.axie
 
