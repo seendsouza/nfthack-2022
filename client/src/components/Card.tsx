@@ -1,3 +1,5 @@
+import UseAxieTeamModal from "./UseAxieTeamModal";
+
 const shortenAddress = (address: string) => {
   return `${address.slice(0, 6)}...${address.slice(-5, -1)}`;
 };
@@ -37,11 +39,15 @@ function Card(props: CardProps) {
                      hover:border-primary hover:bg-primary
                      transition
                      "
+            onClick={() => {
+              console.log("clicked");
+            }}
           >
             Use Axie Team
           </button>
         </div>
       </div>
+      <UseAxieTeamModal />
     </div>
   );
 }

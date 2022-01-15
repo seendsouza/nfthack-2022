@@ -3,6 +3,7 @@ export interface Axie {
   tokenIds: string[]
   lenderAddress: string
   axieWalletAddress: string;
+  isCurrentlyUsed: boolean;
 }
 
 export interface LoginInfo {

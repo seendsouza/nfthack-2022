@@ -1,9 +1,11 @@
 import random as rand
+import string, time
 from flask import Flask, jsonify
 from pymongo import MongoClient
 from flask_cors import CORS
 from utils import cleanseAxieWalletData
-from db import getAvailableAxieWallets, deleteAxieWallet, createAxieWallet, addAxiesToWallet, getAxieWallet
+from db import getAvailableAxieWallets, deleteAxieWallet, createAxieWallet, addAxiesToWallet, \
+    getAxieWallet, setAxieWalletUsage, getRentersAxieWallets, setAxieRentedAtTime
 from w3Connect import getAxiesInWallet, returnAxiesToOwner
 
 app = Flask(__name__)
@@ -73,9 +75,11 @@ def listLentAxies(lenderAddress):
 @app.route("/get-axie-account-info/<string:axieWallet>")
 def getAxieAccountInfo(axieWallet):
     """
-    get axie account login info
+    user rents axies, get axie account info (username, password), set axie wallet to be in use, set rented at date
     """
     wallet = getAxieWallet(db, axieWallet)
+    setAxieWalletUsage(db, axieWallet, True)
+    setAxieRentedAtTime(db, axieWallet, int(time.time()))
 
     if wallet is None:
         return jsonify({"message": "axie wallet not found"})
@@ -88,6 +92,31 @@ def getAxieAccountInfo(axieWallet):
             }
         })
 
+@app.route("/stop-using-axie/<string:axieWallet>")
+def stopUsingAxie(axieWallet):
+    """
+    stop using axie account
+    """
+    setAxieWalletUsage(db, axieWallet, False)
+
+    return jsonify({"message": "stopped using axie account"})
+
+@app.route("/get-renter-axies/<string:renterAddress>")
+def getRenterAxies(renterAddress):
+    """
+    get axies that are currently being rented
+    """
+    data = getRenterAxies(db, renterAddress)
+    cleaned_data = cleanseAxieWalletData(axies)
+
+    return jsonify({
+            "message": "axies being rented by " + renterAddress,
+            "data": cleaned_data
+        })
+
+############################################################################################
+## these are for testing/dev purposes
+############################################################################################
 @app.route("/clear-all")
 def clearAll():
     """
@@ -102,13 +131,15 @@ def fakeInsert():
     insert fake data into db
     """
     db.axieWallets.insert_one({
-        "axieWalletAddress": "0x" +  ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(32)),
-        "lenderAddress": "0x" + ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(32)),
+        "axieWalletAddress": "0x" +  ''.join(rand.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(32)),
+        "lenderAddress": "0x" + ''.join(rand.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(32)),
         "username": "axie-username-"+str(rand.randint(0, 100000)),
         "password": "axie-password-"+str(rand.randint(0, 100000)),
-        "tokenIds": [str(rand.randint(0, 100000)), str(rand.randint(0, 100000)), str(rand.randint(0, 100000))]
+        "tokenIds": [str(rand.randint(0, 100000)), str(rand.randint(0, 100000)), str(rand.randint(0, 100000))],
+        "isCurrentlyUsed": False
     })
     return jsonify({"message": "inserted fake data"})
+
 
 if __name__ == '__main__':
     app.run(debug=True)

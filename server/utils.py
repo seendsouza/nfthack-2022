@@ -7,4 +7,5 @@ def cleanseAxieWalletData(data):
             "axieWalletAddress": axieWallet["axieWalletAddress"],
             "lenderAddress": axieWallet["lenderAddress"],
             "tokenIds": axieWallet["tokenIds"],
+            "isCurrentlyUsed": axieWallet["isCurrentlyUsed"],
         }, data))

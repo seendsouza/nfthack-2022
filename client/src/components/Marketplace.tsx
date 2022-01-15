@@ -21,7 +21,7 @@ function Marketplace() {
     return <span>Error: {error?.message}</span>;
   }
 
-  const cards = data?.map((lending) => (
+  const cards = data?.filter(c => !c.isCurrentlyUsed).map((lending) => (
     <Card
       key={lending.id}
       images={lending.tokenIds.map(getAxieUrl)}

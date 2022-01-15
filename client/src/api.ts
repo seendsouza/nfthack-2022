@@ -30,3 +30,13 @@ export const getAxieAccount = async (axieWalletAddress: string): Promise<LoginIn
     .then(res => res.data);
 };
 
+export const stopUsingAxie = async (axieWalletAddress: string): Promise<void> => {
+  return fetch(`${serverUri}/stop-using-axie/${axieWalletAddress}`, { method: "POST" })
+    .then(() => {return;});
+}
+
+export const getRenterAxies = async (renterWalletAddress: string): Promise<Axie[]> => {
+  return fetch(`${serverUri}/get-renter-axies/${renterWalletAddress}`)
+    .then(res => res.json())
+    .then(res => res.data);
+};
