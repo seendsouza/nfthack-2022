@@ -100,11 +100,12 @@ function LendModal(props: LendModalProps) {
                     Proceed
                   </button>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center flex-wrap">
                   {axies.length === 0
                     ? "No Axies to lend"
                     : axies.map((axie) => (
                         <AxieCard
+                          key={axie}
                           axie={axie}
                           pickedAxies={picked}
                           setPicked={setPicked}

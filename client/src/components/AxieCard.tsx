@@ -8,11 +8,11 @@ type CardProps = {
 function AxieCard(props: CardProps) {
   const { axie, pickedAxies, setPicked } = props;
   const isPicked = pickedAxies
-    .map((pickedAxie: any) => pickedAxie.tokenId)
-    .includes(axie.tokenId);
+    .map((pickedAxie: any) => pickedAxie)
+    .includes(axie);
   const onClick = () => {
     if (isPicked) {
-      const newAxies = pickedAxies.filter((a) => a.tokenId !== axie.tokenId);
+      const newAxies = pickedAxies.filter((a) => a !== axie);
       setPicked(newAxies);
     } else {
       setPicked([...pickedAxies, axie]);
@@ -23,14 +23,14 @@ function AxieCard(props: CardProps) {
       <div className="bg-white rounded-lg overflow-hidden mb-2 px-4">
         <div className="flex w-full items-center">
           <div className="flex flex-row w-2/3 justify-center">
-            <img src={getAxieUrl(axie.tokenId)} alt="Axie" className="w-full" />
+            <img src={getAxieUrl(axie)} alt="Axie" className="w-full" />
           </div>
         </div>
       </div>
       <button
         className="
             w-full
-                     inline-block
+inline-block
                      py-2
                      px-7
                      rounded-lg
@@ -43,10 +43,10 @@ function AxieCard(props: CardProps) {
                      hover:border-primary hover:bg-primary
                      transition
                      "
-      >
         onClick={onClick}
         disabled={!isPicked && pickedAxies.length === 3}
-        {isPicked ? "Pick Axie" : "Unpick Axie"}
+      >
+        {isPicked ? "Unpick Axie" : "Pick Axie"}
       </button>
     </div>
   );
