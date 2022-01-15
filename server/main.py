@@ -13,15 +13,21 @@ CORS(app)
 client = MongoClient('localhost', 27017)
 db = client.axie
 
+## Main Routes
+
+# first start lending and initialize all the axie wallet stuff
+# then, once the user has added all the axies to it, we can finish transfer
+
 @app.route("/start-lending/<string:lenderWallet>", methods=['POST'])
 def startLending(lenderWallet):
     """
     generate wallet, create axie account
     """
 
-    # TODO: create ronin wallet to store axies
+    # TODO: create ronin wallet to store axies and return wallet addr
     newAxieWalletAddr = str(rand.randint(0, 1000000))
-    # TODO: create axie account
+
+    # TODO: create axie account and return axie account username/password
     (axieAccountUsername, axieAccountPassword) = (str(rand.randint(0, 100000)), str(rand.randint(0, 100000)))
 
     createAxieWallet(db, newAxieWalletAddr, lenderWallet, axieAccountUsername, axieAccountPassword)
@@ -34,12 +40,13 @@ def startLending(lenderWallet):
 @app.route("/finish-transfer/<string:lenderWallet>/<string:axieWallet>" , methods=['POST'])
 def finishTransfer(lenderWallet, axieWallet):
     """
-    user has transfered axies to account, update db with new data
+    user has transferred axies to account, update db with new data
     """
 
-    # TODO: get axies in wallet
-    axies = getAxiesInWallet(lenderWallet)
+    # TODO: get all axies now stored in given axie wallet, return array of axie token ids
+    axies = getAxiesInWallet(axieWallet)
 
+    # store token ids in db
     addAxiesToWallet(db, axieWallet, axies)
 
     return jsonify({"message": "finished transfer for " + lenderWallet})
@@ -54,6 +61,8 @@ def returnAxies(axieWallet):
 
     # TODO: return axies to original owner
     returnAxiesToOwner(axieWallet, originalOwner)
+
+    # TODO: delete axie wallet and axie account?
 
     deleteAxieWallet(db, axieWallet) 
     return jsonify({"message": "returned axies to " + originalOwner})
