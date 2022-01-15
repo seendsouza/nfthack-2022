@@ -67,6 +67,8 @@ def returnAxies(axieWallet):
     returnAxiesToOwner(axieWallet, originalOwner)
 
     # TODO: delete axie wallet and axie account?
+    # ! ^ this is not Solana, you can't delete a wallet :)
+    # * deleting account, though, makes a lot of sense.
 
     deleteAxieWallet(db, axieWallet) 
     return jsonify({"message": "returned axies to " + originalOwner})
@@ -158,5 +160,3 @@ def fakeInsert():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
