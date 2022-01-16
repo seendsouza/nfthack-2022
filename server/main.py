@@ -100,7 +100,8 @@ def returnAxies(axieWallet):
     # * deleting account, though, makes a lot of sense.
 
     deleteAxieWallet(db, axieWallet)
-    return jsonify({"message": "returned axies to " + originalOwner})
+    # return jsonify({"message": "returned axies to " + originalOwner})
+    return jsonify({"message": "returned axies to originalOwner"})
 
 
 @app.route("/list-lent-axies", defaults={"lenderAddress": None})
