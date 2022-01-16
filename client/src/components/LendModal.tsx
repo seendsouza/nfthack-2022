@@ -46,8 +46,8 @@ function LendModal(props: LendModalProps) {
   const onClick = async () => {
     // Get wallet address to send Axies to
     const axieWalletAddress = await startLending(account as string);
-    const toWalletAddress = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045";
-    await sendAxiesToWallet(axies, toWalletAddress);
+    //const toWalletAddress = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"; // for testing purposes
+    await sendAxiesToWallet(axies, axieWalletAddress);
     // Tell backend we're done
     await finishTransfer(account as string, axieWalletAddress);
   };

@@ -42,7 +42,7 @@ def startLending(lenderWallet):
     newAxieWallet = createWallet()
     newAxieWalletAddr = "0x" + newAxieWallet.addr.hex()
 
-    createAxieWallet(db, newAxieWalletAddr, lenderWallet)
+    createAxieWallet(db, newAxieWalletAddr, newAxieWallet.private_key, lenderWallet)
 
     return jsonify(
         {
@@ -63,9 +63,6 @@ def finishTransfer(lenderWallet, axieWallet):
     # ! make sure the axieWallet is of the form: 0x3db763bbbb1ac900eb2eb8b106218f85f9f64a13
     axies = getAxiesIds(axieWallet)
 
-    # store token ids in db
-    #addAxiesToWallet(db, axieWallet, axies)
-
     # TODO: create axie account and return axie account username/password
     (axieAccountUsername, axieAccountPassword) = (
         str(rand.randint(0, 100000)),
@@ -83,11 +80,19 @@ def returnAxies(axieWallet):
     return the axies to their original owner
     """
 
-    # TODO: this we pull from the db I think
-    wallet = Wallet(private_key=b"", public_key=b"", addr=b"")
-    axieId = 0
+    axieWalletData = getAxieWallet(db, axieWallet) 
 
-    originalOwner = getAxieWallet(db, axieWallet)["lenderAddress"]
+    # TODO: this we pull from the db I think
+    wallet = Wallet(
+            private_key=bytes(axieWalletData["privateKey"]), 
+            public_key=bytes(axieWalletData["axieWalletAddress"]), 
+            addr=bytes(axieWalletData["axieWalletAddress"])
+        )
+
+    originalOwner = axieWalletData["lenderAddress"]
+
+    for axieId in axieWalletData["tokenIds"]:
+        returnAxiesToOwner(wallet, axieId, originalOwner)
 
     returnAxiesToOwner(wallet, originalOwner, axieId)
 

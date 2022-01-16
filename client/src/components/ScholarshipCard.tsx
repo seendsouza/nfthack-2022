@@ -26,13 +26,13 @@ function ScholarshipCard(props: CardProps) {
     updateAxies,
   } = props;
 
-  function handleReturnAxie() {
+  async function handleReturnAxie() {
     if (isLending) {
-      returnAxiesToOwner(axieWalletAddress);
+      await returnAxiesToOwner(axieWalletAddress);
     } else {
-      stopUsingAxie(axieWalletAddress);
+      await stopUsingAxie(axieWalletAddress);
     }
-    updateAxies();
+    await updateAxies();
   }
 
   return (

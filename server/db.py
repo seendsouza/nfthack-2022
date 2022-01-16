@@ -5,6 +5,7 @@ axie-wallets
 [
   {
     "axieWalletAddress": String,
+    "privateKey": Bytes,
     "lenderAddress": String,
     "tokenIds": [String],
     "isCurrentlyUsed": Boolean,
@@ -17,13 +18,14 @@ axie-wallets
 """
 
 
-def createAxieWallet(db, axieWalletAddr, lenderAddress, username, password):
+def createAxieWallet(db, axieWalletAddr, privateKey, lenderAddress, username, password):
     """
     initialize axie wallet in database
     """
     db.axieWallets.insert_one(
         {
             "axieWalletAddress": axieWalletAddr,
+            "privateKey": privateKey,
             "lenderAddress": lenderAddress,
             "tokenIds": [],
             "isCurrentlyUsed": False,
