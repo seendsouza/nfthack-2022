@@ -54,7 +54,7 @@ function Rentings() {
       isLending={false}
       lenderAddress={lending.lenderAddress}
       axieWalletAddress={lending.axieWalletAddress}
-      updateRentedAxies={updateRentedAxies}
+      updateAxies={updateRentedAxies}
     />
   ));
 
