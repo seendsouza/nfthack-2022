@@ -14,7 +14,7 @@ from db import (
     getRentersAxieWallets,
     rentAxiesWallet,
     completeTransfer,
-    stopUsingAxie
+    stopUsingAxie,
 )
 from w3Connect import returnAxiesToOwner
 
@@ -32,7 +32,7 @@ db = client.axie
 @app.route("/start-lending/<string:lenderWallet>", methods=["POST"])
 def startLending(lenderWallet):
     """
-    generate wallet 
+    generate wallet
     """
 
     # TODO: This is not the correct flow. We generate the wallet, we show this wallet
@@ -80,14 +80,13 @@ def returnAxies(axieWallet):
     return the axies to their original owner
     """
 
-    axieWalletData = getAxieWallet(db, axieWallet) 
+    axieWalletData = getAxieWallet(db, axieWallet)
 
-    # TODO: this we pull from the db I think
     wallet = Wallet(
-            private_key=bytes(axieWalletData["privateKey"]), 
-            public_key=bytes(axieWalletData["axieWalletAddress"]), 
-            addr=bytes(axieWalletData["axieWalletAddress"])
-        )
+        private_key=bytes(axieWalletData["privateKey"]),
+        public_key=bytes(axieWalletData["axieWalletAddress"]),
+        addr=bytes(axieWalletData["axieWalletAddress"]),
+    )
 
     originalOwner = axieWalletData["lenderAddress"]
 
@@ -164,10 +163,11 @@ def getRenterAxies(renterAddress):
         {"message": "axies being rented by " + renterAddress, "data": cleaned_data}
     )
 
+
 @app.route("/get-axies-in-wallet/<string:wallet>")
 def getAxiesInWallet(wallet):
     """
-    get axies all axies that are in a given wallet 
+    get axies all axies that are in a given wallet
     """
 
     if wallet is None or wallet == "undefined" or wallet == "" or wallet == "null":

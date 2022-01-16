@@ -12,7 +12,10 @@ def returnAxiesToOwner(axieWallet: Wallet, ownerWalletAddr: str, axieId: int):
     """
 
     transfer = Transfer(
-        "0x" + axieWallet.addr.hex(), axieWallet.private_key, ownerWalletAddr, axieId
+        "ronin:" + axieWallet.addr.hex(),
+        axieWallet.private_key,
+        ownerWalletAddr,
+        axieId,
     )
 
     transfer.execute()
