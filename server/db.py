@@ -18,7 +18,7 @@ axie-wallets
 """
 
 
-def createAxieWallet(db, axieWalletAddr, privateKey, lenderAddress, username, password):
+def createAxieWallet(db, axieWalletAddr, privateKey, lenderAddress):
     """
     initialize axie wallet in database
     """
@@ -35,6 +35,7 @@ def createAxieWallet(db, axieWalletAddr, privateKey, lenderAddress, username, pa
         }
     )
 
+
 def completeTransfer(db, axieWalletAddr, axies, username, password):
     """
     complete transfer of axies to axieWallet
@@ -49,6 +50,7 @@ def completeTransfer(db, axieWalletAddr, axies, username, password):
             }
         },
     )
+
 
 def addAxiesToWallet(db, axieWalletAddr, axies):
     """
@@ -101,6 +103,7 @@ def rentAxiesWallet(db, axieWallet, renterAddress, time):
             }
         },
     )
+
 
 def stopUsingAxie(db, axieWallet):
     """
