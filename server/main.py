@@ -82,18 +82,18 @@ def returnAxies(axieWallet):
 
     axieWalletData = getAxieWallet(db, axieWallet)
 
-    wallet = Wallet(
-        private_key=bytes(axieWalletData["privateKey"]),
-        public_key=bytes(axieWalletData["axieWalletAddress"]),
-        addr=bytes(axieWalletData["axieWalletAddress"]),
-    )
+    # wallet = Wallet(
+    #     private_key=bytes(axieWalletData["privateKey"]),
+    #     public_key=bytes(axieWalletData["axieWalletAddress"]),
+    #     addr=bytes(axieWalletData["axieWalletAddress"]),
+    # )
 
-    originalOwner = axieWalletData["lenderAddress"]
+    # originalOwner = axieWalletData["lenderAddress"]
 
-    for axieId in axieWalletData["tokenIds"]:
-        returnAxiesToOwner(wallet, axieId, originalOwner)
+    # for axieId in axieWalletData["tokenIds"]:
+    #     returnAxiesToOwner(wallet, axieId, originalOwner)
 
-    returnAxiesToOwner(wallet, originalOwner, axieId)
+    # returnAxiesToOwner(wallet, originalOwner, axieId)
 
     # TODO: delete axie wallet and axie account?
     # ! ^ this is not Solana, you can't delete a wallet :)
