@@ -190,40 +190,67 @@ def clearAll():
     return jsonify({"message": "cleared all data"})
 
 
-@app.route("/fake-insert", methods=["POST"])
-def fakeInsert():
+
+@app.route("/fake-insert", defaults={"lenderAddress": None}, methods=["POST"])
+@app.route("/fake-insert/<string:lenderAddress>", methods=["POST"])
+def fakeInsert(lenderAddress):
     """
     insert fake data into db
     """
-    db.axieWallets.insert_one(
-        {
-            "axieWalletAddress": "0x"
-            + "".join(
-                rand.choice(
-                    string.ascii_uppercase + string.ascii_lowercase + string.digits
-                )
-                for _ in range(32)
-            ),
-            "lenderAddress": "0x"
-            + "".join(
-                rand.choice(
-                    string.ascii_uppercase + string.ascii_lowercase + string.digits
-                )
-                for _ in range(32)
-            ),
-            "renterAddress": "",
-            "username": "axie-username-" + str(rand.randint(0, 100000)),
-            "password": "axie-password-" + str(rand.randint(0, 100000)),
-            "tokenIds": [
-                str(rand.randint(0, 100000)),
-                str(rand.randint(0, 100000)),
-                str(rand.randint(0, 100000)),
-            ],
-            "isCurrentlyUsed": False,
-            "rentedAt": rand.randint(0, 100000),
-        }
-    )
-    return jsonify({"message": "inserted fake data"})
+    if lenderAddress is None:
+        db.axieWallets.insert_one(
+            {
+                "axieWalletAddress": "0x"
+                + "".join(
+                    rand.choice(
+                        string.ascii_uppercase + string.ascii_lowercase + string.digits
+                    )
+                    for _ in range(32)
+                ),
+                "lenderAddress": "0x"
+                + "".join(
+                    rand.choice(
+                        string.ascii_uppercase + string.ascii_lowercase + string.digits
+                    )
+                    for _ in range(32)
+                ),
+                "renterAddress": "",
+                "username": "axie-username-" + str(rand.randint(0, 100000)),
+                "password": "axie-password-" + str(rand.randint(0, 100000)),
+                "tokenIds": [
+                    str(rand.randint(0, 100000)),
+                    str(rand.randint(0, 100000)),
+                    str(rand.randint(0, 100000)),
+                ],
+                "isCurrentlyUsed": False,
+                "rentedAt": rand.randint(0, 100000),
+            }
+        )
+        return jsonify({"message": "inserted fake data"})
+    else:
+        db.axieWallets.insert_one(
+            {
+                "axieWalletAddress": "0x"
+                + "".join(
+                    rand.choice(
+                        string.ascii_uppercase + string.ascii_lowercase + string.digits
+                    )
+                    for _ in range(32)
+                ),
+                "lenderAddress": lenderAddress,
+                "renterAddress": "",
+                "username": "axie-username-" + str(rand.randint(0, 100000)),
+                "password": "axie-password-" + str(rand.randint(0, 100000)),
+                "tokenIds": [
+                    str(rand.randint(0, 100000)),
+                    str(rand.randint(0, 100000)),
+                    str(rand.randint(0, 100000)),
+                ],
+                "isCurrentlyUsed": False,
+                "rentedAt": rand.randint(0, 100000),
+            }
+        )
+        return jsonify({"message": "inserted fake data"})
 
 
 if __name__ == "__main__":
