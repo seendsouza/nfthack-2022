@@ -31,7 +31,7 @@ function LendModal(props: LendModalProps) {
     const contract = new ethers.Contract(
       AXIE_CONTRACT_ADDRESS,
       axieAbi,
-      library
+      library?.getSigner()
     );
     for (const axie of axies) {
       await contract.safeTransferFrom(
@@ -95,7 +95,7 @@ function LendModal(props: LendModalProps) {
                   <button
                     className="text-sm bg-black text-white px-6 py-2 rounded disabled:bg-slate-400"
                     onClick={onClick}
-                    disabled={picked.length !== 3}
+                    disabled={picked.length !== 1}
                   >
                     Proceed
                   </button>
