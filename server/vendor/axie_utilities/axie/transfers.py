@@ -13,22 +13,11 @@ from .axies import Axies
 from .utils import (
     get_nonce,
     load_json,
-    ImportantLogsFilter,
     RONIN_PROVIDER_FREE,
     AXIE_CONTRACT,
     TIMEOUT_MINS,
     USER_AGENT,
 )
-
-
-now = int(datetime.now().timestamp())
-log_file = f"logs/results_{now}.log"
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-file_handler = logging.FileHandler(log_file, mode="w")
-file_handler.setLevel(logging.INFO)
-file_handler.addFilter(ImportantLogsFilter())
-logger.addHandler(file_handler)
 
 
 class Transfer:
@@ -66,7 +55,7 @@ class Transfer:
         ).buildTransaction(
             {
                 "chainId": 2020,
-                "gas": 492874,
+                "gas": 163463,
                 "gasPrice": self.w3.toWei("0", "gwei"),
                 "value": 0,
                 "nonce": nonce,
@@ -86,7 +75,7 @@ class Transfer:
             # We will wait for max 10min for this trasnfer to happen
             if datetime.now() - start_time > timedelta(minutes=TIMEOUT_MINS):
                 success = False
-                logging.info(f"Important: Transfer {self}, timed out!")
+                print(f"Important: Transfer {self}, timed out!")
                 break
             try:
                 recepit = self.w3.eth.get_transaction_receipt(hash)
@@ -96,18 +85,16 @@ class Transfer:
                     success = False
                 break
             except exceptions.TransactionNotFound:
-                logging.info(
-                    f"Waiting for transfer '{self}' to finish (Nonce:{nonce})..."
-                )
+                print(f"Waiting for transfer '{self}' to finish (Nonce:{nonce})...")
                 # Sleep 10 seconds not to constantly send requests!
                 sleep(10)
         if success:
-            logging.info(
+            print(
                 f"Important: {self} completed! Hash: {hash} - "
                 f"Explorer: https://explorer.roninchain.com/tx/{str(hash)}"
             )
         else:
-            logging.info(f"Important: {self} failed")
+            print(f"Important: {self} failed")
 
     def __str__(self):
         return (
@@ -123,13 +110,13 @@ class AxieTransferManager:
         self.secure = secure
 
     def verify_inputs(self):
-        logging.info("Validating file inputs...")
+        print("Validating file inputs...")
         validation_success = True
         # Validate transfers file
         try:
             validate(self.transfers_file, transfers_schema)
         except ValidationError as ex:
-            logging.critical(
+            print(
                 "Transfers file failed validation. Please review it. "
                 f"Error given: {ex.message}. "
                 f"For attribute in: {list(ex.path)}"
@@ -138,31 +125,29 @@ class AxieTransferManager:
         # Check we have private keys for all accounts
         for acc in self.transfers_file:
             if acc["AccountAddress"] not in self.secrets_file:
-                logging.critical(
+                print(
                     f"Account '{acc['AccountAddress']}' is not present in secret file, please add it."
                 )
                 validation_success = False
         for sf in self.secrets_file:
             if len(self.secrets_file[sf]) != 66 or self.secrets_file[sf][:2] != "0x":
-                logging.critical(
-                    f"Private key for account {sf} is not valid, please review it!"
-                )
+                print(f"Private key for account {sf} is not valid, please review it!")
                 validation_success = False
         if not validation_success:
-            logging.critical(
+            print(
                 "Please make sure your transfers.json file looks like the one in the README.md\n"
                 "Find it here: https://ferranmarin.github.io/axie-scholar-utilities/"
             )
-            logging.critical(
+            print(
                 "If your problem is with secrets.json, "
                 "delete it and re-generate the file starting with an empty secrets file."
             )
             sys.exit()
-        logging.info("Files correctly validated!")
+        print("Files correctly validated!")
 
     def prepare_transfers(self):
         transfers = []
-        logging.info("Preparing transfers")
+        print("Preparing transfers")
         for acc in self.transfers_file:
             axies_in_acc = Axies(acc["AccountAddress"]).get_axies()
             for axie in acc["Transfers"]:
@@ -178,19 +163,19 @@ class AxieTransferManager:
                             axie_id=axie["AxieId"],
                         )
                         transfers.append(t)
-                        logging.info(f"Added transaction to the list: {t}")
+                        print(f"Added transaction to the list: {t}")
                     else:
-                        logging.info(
+                        print(
                             f"Axie ({axie['AxieId']}) not in account ({acc['AccountAddress']}), skipping."
                         )
                 else:
-                    logging.info(
+                    print(
                         f"Receiver address {axie['ReceiverAddress']} not in secrets.json, skipping transfer."
                     )
         self.execute_transfers(transfers)
 
     def execute_transfers(self, transfers):
-        logging.info("Starting to transfer axies")
+        print("Starting to transfer axies")
         for t in transfers:
             t.execute()
-        logging.info("Axie transfers finished")
+        print("Axie transfers finished")
